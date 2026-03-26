@@ -1,18 +1,86 @@
-# This .gitignore is appropriate for repositories deployed to GitHub Pages and using
-# a Gemfile as specified at https://github.com/github/pages-gem#conventional
+# ===== CREDENCIALES (NUNCA SUBIR AL REPOSITORIO) =====
+firmware/wifi/credenciales.h
+credenciales.h
 
-# Basic Jekyll gitignores (synchronize to Jekyll.gitignore)
+# ===== ARDUINO / ESP32 BUILD ARTIFACTS =====
+build/
+*.hex
+*.bin
+*.elf
+*.map
+*.lst
+*.d
+*.o
+*.a
+
+# ===== ARDUINO IDE =====
+.arduino15/
+*.bak
+*.tmp
+preferences.txt
+
+# ===== VSCODE =====
+.vscode/
+*.code-workspace
+
+# ===== SISTEMA OPERATIVO =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ===== PYTHON (análisis de datos) =====
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+.eggs/
+*.egg
+.env
+.venv
+venv/
+ENV/
+env.bak/
+
+# ===== NODE / JAVASCRIPT =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# ===== LOGS =====
+*.log
+logs/
+
+# ===== ARCHIVOS TEMPORALES =====
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ===== JEKYLL / GITHUB PAGES =====
 _site/
 .sass-cache/
 .jekyll-cache/
 .jekyll-metadata
-
-# Additional Ruby/bundler ignore for when you run: bundle install
+Gemfile.lock
 /vendor
 
-# Specific ignore for GitHub Pages
-# GitHub Pages will always use its own deployed version of pages-gem 
-# This means GitHub Pages will NOT use your Gemfile.lock and therefore it is
-# counterproductive to check this file into the repository.
-# Details at https://github.com/github/pages-gem/issues/768
-Gemfile.lock
+# ===== OTROS =====
+*.zip
+*.tar.gz
+*.rar
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
