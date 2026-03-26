@@ -1462,13 +1462,13 @@
         <p class="section-subtitle">Plan de desarrollo organizado en 7 fases desde la investigación inicial hasta la publicación académica.</p>
       </div>
 
-      <!-- Progress bar -->
+      <!-- Progress bar — driven by JS constants PHASES_DONE / PHASES_TOTAL -->
       <div class="roadmap-progress-wrap reveal">
         <div class="roadmap-progress-header">
-          <span class="roadmap-progress-label">Progreso general — 2 de 7 fases completadas</span>
-          <span class="roadmap-progress-pct">28%</span>
+          <span class="roadmap-progress-label" id="roadmap-label">Progreso general</span>
+          <span class="roadmap-progress-pct" id="roadmap-pct"></span>
         </div>
-        <div class="roadmap-bar-bg" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del proyecto">
+        <div class="roadmap-bar-bg" id="roadmap-bar-bg" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Progreso del proyecto">
           <div class="roadmap-bar-fill" id="roadmap-bar"></div>
         </div>
       </div>
@@ -1909,12 +1909,26 @@
       document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
       /* ── Roadmap progress bar ──────────────────────────── */
-      const roadmapBar = document.getElementById('roadmap-bar');
+      // Update PHASES_DONE (and add/remove .completed/.progress items in the
+      // timeline HTML) whenever project progress changes. PHASES_TOTAL should
+      // match the number of <div class="timeline-item"> elements.
+      const PHASES_DONE  = 2;
+      const PHASES_TOTAL = 7;
+      const pct = Math.round((PHASES_DONE / PHASES_TOTAL) * 100);
+
+      const roadmapBar   = document.getElementById('roadmap-bar');
+      const roadmapBarBg = document.getElementById('roadmap-bar-bg');
+      const roadmapLabel = document.getElementById('roadmap-label');
+      const roadmapPct   = document.getElementById('roadmap-pct');
+
+      if (roadmapLabel) roadmapLabel.textContent = `Progreso general — ${PHASES_DONE} de ${PHASES_TOTAL} fases completadas`;
+      if (roadmapPct)   roadmapPct.textContent   = `${pct}%`;
+      if (roadmapBarBg) roadmapBarBg.setAttribute('aria-valuenow', String(pct));
+
       const progressObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            // Small delay for visual effect after reveal
-            setTimeout(() => { roadmapBar.style.width = '28%'; }, 350);
+            setTimeout(() => { roadmapBar.style.width = pct + '%'; }, 350);
             progressObserver.unobserve(entry.target);
           }
         });
