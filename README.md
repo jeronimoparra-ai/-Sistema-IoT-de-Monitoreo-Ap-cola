@@ -2,7 +2,7 @@
   <img src="assets/logos/banner.png" alt="Banner Sistema IoT Apícola" width="100%">
   
   <h1>🐝 Sistema IoT de Monitoreo Apícola</h1>
-  <h3><em>Monitoreo de variables bioclimáticas en colmenas de Apis mellifera</em><br>Centro de Formación Ambiental SENA · Caucasia, Antioquia</h3>
+  <h3><em>Monitoreo de variables bioclimáticas en colmenas de Apis mellifera</em><br>Centro de Formación Ambiental SENA · El Bagre, Antioquia</h3>
 </div>
 
 <div align="center">
