@@ -335,5 +335,5 @@ Investigación aplicada con enfoque mixto basada en **DSR** (Design Science Rese
 
 <div align="center">
   <p>🐝 Hecho con propósito para el bienestar de las colmenas y la formación técnica del SENA</p>
-  <p><em>Caucasia, Antioquia, Colombia · 2026</em></p>
+  <p><em>El Bagre, Antioquia, Colombia · 2026</em></p>
 </div>
