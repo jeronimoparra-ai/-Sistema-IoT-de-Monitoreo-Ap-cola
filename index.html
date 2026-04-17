@@ -2406,15 +2406,16 @@
       const docxTriggers = document.querySelectorAll('.docx-viewer-trigger');
 
       if (docxModal && docxClose && docxFrame && docxOpenNew && docxDownload) {
-        const DOCX_RAW_URL = 'https://raw.githubusercontent.com/jeronimoparra-ai/-Sistema-IoT-de-Monitoreo-Ap-cola/copilot/create-repository-structure/docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx';
-        const OFFICE_VIEWER_URL = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(DOCX_RAW_URL)}`;
+        const DOCX_FILE_PATH = 'docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx';
+        const DOCX_PUBLIC_URL = new URL(DOCX_FILE_PATH, window.location.href).toString();
+        const OFFICE_VIEWER_URL = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(DOCX_PUBLIC_URL)}`;
         let lastFocusedElement = null;
 
         const setDocLinks = () => {
-          docxOpenNew.href = DOCX_RAW_URL;
-          docxDownload.href = DOCX_RAW_URL;
-          if (docxFallbackOpen) docxFallbackOpen.href = DOCX_RAW_URL;
-          if (docxFallbackDownload) docxFallbackDownload.href = DOCX_RAW_URL;
+          docxOpenNew.href = DOCX_PUBLIC_URL;
+          docxDownload.href = DOCX_PUBLIC_URL;
+          if (docxFallbackOpen) docxFallbackOpen.href = DOCX_PUBLIC_URL;
+          if (docxFallbackDownload) docxFallbackDownload.href = DOCX_PUBLIC_URL;
         };
 
         const closeDocxModal = () => {
