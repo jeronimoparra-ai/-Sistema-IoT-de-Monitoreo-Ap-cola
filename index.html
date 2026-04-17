@@ -1087,6 +1087,131 @@
       border: 1px solid rgba(245,158,11,0.2);
     }
 
+    .docx-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1260;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .docx-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .docx-panel {
+      width: min(1120px, 100%);
+      max-height: min(90vh, 980px);
+      background: var(--negro2);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+      overflow: hidden;
+      opacity: 0;
+      transform: scale(0.97);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .docx-modal.open .docx-panel {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .docx-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(245,158,11,0.16);
+      background: rgba(5,5,5,0.92);
+    }
+    .docx-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--amber2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .docx-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .docx-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(245,158,11,0.25);
+      background: rgba(245,158,11,0.08);
+      color: var(--amber);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      border-radius: 8px;
+      padding: 8px 11px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .docx-btn:hover {
+      background: var(--amber);
+      color: var(--negro);
+      border-color: var(--amber);
+    }
+    .docx-btn.primary {
+      background: var(--amber);
+      color: var(--negro);
+      border-color: var(--amber);
+    }
+    .docx-btn.primary:hover {
+      background: var(--amber2);
+      border-color: var(--amber2);
+    }
+    .docx-body {
+      padding: 14px 16px 16px;
+    }
+    .docx-loading {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--texto3);
+      margin-bottom: 10px;
+    }
+    .docx-frame-wrap {
+      width: 100%;
+      min-height: clamp(320px, 64vh, 700px);
+      border: 1px solid rgba(245,158,11,0.16);
+      border-radius: 10px;
+      overflow: hidden;
+      background: #080808;
+    }
+    .docx-frame {
+      display: block;
+      width: 100%;
+      height: clamp(320px, 64vh, 700px);
+      border: none;
+    }
+    .docx-fallback {
+      display: block;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(245,158,11,0.2);
+      background: rgba(245,158,11,0.05);
+    }
+    .docx-fallback p {
+      margin-bottom: 10px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--texto2);
+      line-height: 1.8;
+    }
+
     /* ═══════════════════════════════════════════════════════════════
        TEAM SECTION
     ═══════════════════════════════════════════════════════════════ */
@@ -1425,6 +1550,12 @@
       .footer-bottom { flex-direction: column; text-align: center; }
       .research-modal { padding: 14px; }
       .research-content { padding: 16px; }
+      .docx-modal { padding: 12px; }
+      .docx-panel { max-height: 94vh; }
+      .docx-head { padding: 12px; }
+      .docx-body { padding: 12px; }
+      .docx-actions { width: 100%; }
+      .docx-actions .docx-btn { flex: 1 1 140px; }
     }
 
     @media (max-width: 480px) {
@@ -1770,7 +1901,7 @@
           <p class="doc-desc">Documento inicial con justificación, objetivos generales y específicos, alcance del proyecto, metodología de investigación aplicada y cronograma de actividades.</p>
           <div class="doc-footer">
             <span class="doc-status available">Disponible</span>
-            <a href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener" class="doc-link" download="EVIDENCIA 3 Proyecto FINAL.docx">Ver →</a>
+            <a href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener" class="doc-link docx-viewer-trigger" download="EVIDENCIA 3 Proyecto FINAL.docx" aria-haspopup="dialog">Ver →</a>
           </div>
         </article>
 
@@ -1780,7 +1911,7 @@
           <p class="doc-desc">Revisión bibliográfica sobre apicultura de precisión, IoT en agricultura, biología de <em>Apis mellifera</em>, variables bioclimáticas críticas y sistemas de monitoreo previos documentados.</p>
           <div class="doc-footer">
             <span class="doc-status available">Disponible</span>
-            <a href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener" class="doc-link" download="EVIDENCIA 3 Proyecto FINAL.docx">Ver →</a>
+            <a href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener" class="doc-link docx-viewer-trigger" download="EVIDENCIA 3 Proyecto FINAL.docx" aria-haspopup="dialog">Ver →</a>
           </div>
         </article>
 
@@ -2135,6 +2266,33 @@
     </article>
   </div>
 
+  <!-- ══════════════════════ MODAL VISOR DOCX ══════════════════════ -->
+  <div class="docx-modal" id="docx-modal" aria-hidden="true">
+    <article class="docx-panel" role="dialog" aria-modal="true" aria-label="Visor del documento EVIDENCIA 3 Proyecto FINAL">
+      <header class="docx-head">
+        <h3 class="docx-title">EVIDENCIA 3 Proyecto FINAL.docx</h3>
+        <div class="docx-actions">
+          <a class="docx-btn" id="docx-open-new" target="_blank" rel="noopener">Abrir en nueva pestaña</a>
+          <a class="docx-btn primary" id="docx-download" download="EVIDENCIA 3 Proyecto FINAL.docx">Descargar</a>
+          <button type="button" class="docx-btn" id="docx-close">Cerrar ✕</button>
+        </div>
+      </header>
+      <div class="docx-body">
+        <p class="docx-loading" id="docx-loading">Cargando vista previa del documento…</p>
+        <div class="docx-frame-wrap">
+          <iframe class="docx-frame" id="docx-iframe" title="Vista previa del documento EVIDENCIA 3 Proyecto FINAL" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="docx-fallback" id="docx-fallback" role="status" aria-live="polite">
+          <p>Si la vista previa no aparece correctamente, usa estas opciones para descargar el archivo o abrirlo en una pestaña nueva.</p>
+          <div class="docx-actions">
+            <a class="docx-btn primary" id="docx-fallback-download" download="EVIDENCIA 3 Proyecto FINAL.docx">Descargar ahora</a>
+            <a class="docx-btn" id="docx-fallback-open" target="_blank" rel="noopener">Abrir en nueva pestaña</a>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
   <!-- ══════════════════════ JAVASCRIPT ══════════════════════ -->
   <script>
     (function () {
@@ -2235,6 +2393,89 @@
           closeResearchModal();
         }
       });
+
+      /* ── Modal visor DOCX (Documentación) ──────────────── */
+      const docxModal = document.getElementById('docx-modal');
+      const docxClose = document.getElementById('docx-close');
+      const docxFrame = document.getElementById('docx-iframe');
+      const docxLoading = document.getElementById('docx-loading');
+      const docxOpenNew = document.getElementById('docx-open-new');
+      const docxDownload = document.getElementById('docx-download');
+      const docxFallbackOpen = document.getElementById('docx-fallback-open');
+      const docxFallbackDownload = document.getElementById('docx-fallback-download');
+      const docxTriggers = document.querySelectorAll('.docx-viewer-trigger');
+
+      if (docxModal && docxClose && docxFrame && docxOpenNew && docxDownload) {
+        const DOCX_RAW_URL = 'https://raw.githubusercontent.com/jeronimoparra-ai/-Sistema-IoT-de-Monitoreo-Ap-cola/copilot/create-repository-structure/docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx';
+        const OFFICE_VIEWER_URL = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(DOCX_RAW_URL)}`;
+        let lastFocusedElement = null;
+
+        const setDocLinks = () => {
+          docxOpenNew.href = DOCX_RAW_URL;
+          docxDownload.href = DOCX_RAW_URL;
+          if (docxFallbackOpen) docxFallbackOpen.href = DOCX_RAW_URL;
+          if (docxFallbackDownload) docxFallbackDownload.href = DOCX_RAW_URL;
+        };
+
+        const closeDocxModal = () => {
+          docxModal.classList.remove('open');
+          docxModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          docxFrame.src = 'about:blank';
+          if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+          }
+        };
+
+        const openDocxModal = (event) => {
+          event.preventDefault();
+          lastFocusedElement = document.activeElement;
+          setDocLinks();
+          if (docxLoading) docxLoading.textContent = 'Cargando vista previa del documento…';
+          docxFrame.src = OFFICE_VIEWER_URL;
+          docxModal.classList.add('open');
+          docxModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          docxClose.focus();
+        };
+
+        docxTriggers.forEach((trigger) => {
+          trigger.addEventListener('click', openDocxModal);
+        });
+
+        docxFrame.addEventListener('load', () => {
+          if (docxLoading) docxLoading.textContent = 'Vista previa cargada. Si no se visualiza bien, usa las opciones de descarga o apertura.';
+        });
+        docxFrame.addEventListener('error', () => {
+          if (docxLoading) docxLoading.textContent = 'La vista previa no está disponible en este navegador.';
+        });
+        docxClose.addEventListener('click', closeDocxModal);
+        docxModal.addEventListener('click', (event) => {
+          if (event.target === docxModal) closeDocxModal();
+        });
+        document.addEventListener('keydown', (event) => {
+          if (!docxModal.classList.contains('open')) return;
+
+          if (event.key === 'Escape') {
+            closeDocxModal();
+            return;
+          }
+
+          if (event.key === 'Tab') {
+            const focusable = docxModal.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])');
+            if (!focusable.length) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (event.shiftKey && document.activeElement === first) {
+              event.preventDefault();
+              last.focus();
+            } else if (!event.shiftKey && document.activeElement === last) {
+              event.preventDefault();
+              first.focus();
+            }
+          }
+        });
+      }
 
       /* ── Intersection Observer (scroll reveal) ─────────── */
       const revealObserver = new IntersectionObserver((entries) => {
