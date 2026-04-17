@@ -340,6 +340,7 @@
       width: fit-content;
       margin: 0 auto;
       text-shadow: 0 0 24px rgba(242,181,68,0.2);
+      z-index: 1;
     }
     .hero-h1 .line-amber::after {
       content: '';
@@ -349,6 +350,63 @@
       background: linear-gradient(90deg, var(--amber), var(--amber2), var(--amber3));
       border-radius: 2px;
     }
+    .bee-swarm {
+      position: absolute;
+      inset: -28px -44px -20px;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0;
+    }
+    .bee-orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      will-change: transform, opacity;
+    }
+    .bee {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12px;
+      height: 10px;
+      transform: translate(-50%, -50%);
+      filter: drop-shadow(0 2px 6px rgba(242,181,68,0.35));
+    }
+    .bee-core {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, #0f1118 0 24%, #f2b544 24% 50%, #12141b 50% 73%, #f4c769 73% 100%);
+      border: 1px solid rgba(22,24,31,0.75);
+    }
+    .bee-wing {
+      position: absolute;
+      top: -5px;
+      width: 7px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 244, 223, 0.55);
+      border: 1px solid rgba(255, 238, 206, 0.45);
+      transform-origin: 50% 100%;
+      backdrop-filter: blur(1px);
+    }
+    .bee-wing-left { left: 1px; }
+    .bee-wing-right { right: 1px; }
+    .bee-trail {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      top: 50%;
+      left: -6px;
+      border-radius: 50%;
+      background: rgba(242,181,68,0.32);
+      transform: translate(-50%, -50%);
+    }
+    .hero-content.reduced-motion .bee-swarm { opacity: 0.3; }
+    .hero-content.reduced-motion .bee-orbit:nth-child(n+3) { display: none; }
 
     /* Subtitle */
     .hero-subtitle {
@@ -1631,6 +1689,7 @@
         padding: 26px 18px 24px;
         border-radius: 16px;
       }
+      .bee-swarm { inset: -22px -28px -18px; }
       .section-title { font-size: clamp(1.7rem, 7vw, 2.4rem); }
       .section-header { margin-bottom: 38px; }
 
@@ -1701,6 +1760,7 @@
       .container { padding: 0 14px; }
       .hero-content { padding: 22px 14px 20px; }
       .hero-h1 { font-size: clamp(2.2rem, 9vw, 3rem); }
+      .bee-swarm { inset: -16px -16px -14px; }
       .hero-badge { font-size: 0.62rem; }
       .hero-subtitle { font-size: 0.78rem; }
       .btn-primary, .btn-outline { padding: 12px 22px; font-size: 0.82rem; }
@@ -1753,7 +1813,19 @@
       </div>
 
       <h1 class="hero-h1" id="hero-heading">
-        <span class="line-amber">BeeStation</span>
+        <span class="line-amber">BeeStation
+          <span class="bee-swarm" aria-hidden="true">
+            <span class="bee-orbit bee-orbit-1">
+              <span class="bee"><span class="bee-wing bee-wing-left"></span><span class="bee-wing bee-wing-right"></span><span class="bee-core"></span><span class="bee-trail"></span></span>
+            </span>
+            <span class="bee-orbit bee-orbit-2">
+              <span class="bee"><span class="bee-wing bee-wing-left"></span><span class="bee-wing bee-wing-right"></span><span class="bee-core"></span><span class="bee-trail"></span></span>
+            </span>
+            <span class="bee-orbit bee-orbit-3">
+              <span class="bee"><span class="bee-wing bee-wing-left"></span><span class="bee-wing bee-wing-right"></span><span class="bee-core"></span><span class="bee-trail"></span></span>
+            </span>
+          </span>
+        </span>
         Monitoreo inteligente<br>
         de colmenas
       </h1>
@@ -2437,6 +2509,7 @@
   </div>
 
   <!-- ══════════════════════ JAVASCRIPT ══════════════════════ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script>
     (function () {
       'use strict';
@@ -2466,6 +2539,89 @@
           hamburger.setAttribute('aria-expanded', 'false');
         });
       });
+
+      /* ── BeeStation ornamental GSAP animation ──────────── */
+      const heroContent = document.querySelector('.hero-content');
+      const beeSwarm = document.querySelector('.bee-swarm');
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      if (heroContent && beeSwarm) {
+        if (reduceMotion || typeof window.gsap === 'undefined') {
+          heroContent.classList.add('reduced-motion');
+          beeSwarm.style.opacity = '0.34';
+        } else {
+          const isMobile = window.matchMedia('(max-width: 768px)').matches;
+          const orbitConfigs = isMobile
+            ? [
+                { radiusX: 52, radiusY: 18, duration: 10.5, delay: 0.2, scale: 0.9 },
+                { radiusX: -44, radiusY: 15, duration: 12.2, delay: 0.8, scale: 0.78 }
+              ]
+            : [
+                { radiusX: 86, radiusY: 24, duration: 12.4, delay: 0.0, scale: 1.02 },
+                { radiusX: -72, radiusY: 20, duration: 14.3, delay: 0.7, scale: 0.9 },
+                { radiusX: 52, radiusY: -28, duration: 10.8, delay: 1.3, scale: 0.82 }
+              ];
+
+          const orbits = Array.from(beeSwarm.querySelectorAll('.bee-orbit'));
+          const wings = beeSwarm.querySelectorAll('.bee-wing-left, .bee-wing-right');
+          const trails = beeSwarm.querySelectorAll('.bee-trail');
+
+          orbits.forEach((orbit, idx) => {
+            const cfg = orbitConfigs[idx];
+            if (!cfg) {
+              orbit.style.display = 'none';
+              return;
+            }
+
+            window.gsap.set(orbit, { x: cfg.radiusX, y: 0, rotation: idx * 16, scale: cfg.scale, opacity: 0 });
+            window.gsap.to(orbit, { opacity: 1, duration: 0.8, delay: cfg.delay + 0.2, ease: 'power2.out' });
+            window.gsap.to(orbit, {
+              keyframes: [
+                { x: cfg.radiusX, y: 0, rotation: 12 },
+                { x: cfg.radiusX * 0.35, y: -cfg.radiusY, rotation: 4 },
+                { x: -cfg.radiusX * 0.35, y: -cfg.radiusY * 0.65, rotation: -6 },
+                { x: -cfg.radiusX, y: 0, rotation: -12 },
+                { x: -cfg.radiusX * 0.45, y: cfg.radiusY, rotation: -4 },
+                { x: cfg.radiusX * 0.32, y: cfg.radiusY * 0.7, rotation: 7 },
+                { x: cfg.radiusX, y: 0, rotation: 12 }
+              ],
+              duration: cfg.duration,
+              repeat: -1,
+              delay: cfg.delay,
+              ease: 'sine.inOut'
+            });
+          });
+
+          window.gsap.to(wings, {
+            scaleY: 0.5,
+            y: -1.2,
+            duration: 0.11,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            stagger: { each: 0.018, from: 'random' }
+          });
+
+          window.gsap.to(trails, {
+            opacity: 0.25,
+            x: -2.2,
+            duration: 0.7,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut',
+            stagger: 0.14
+          });
+
+          window.gsap.fromTo(beeSwarm, { opacity: 0 }, { opacity: 1, duration: 1.1, ease: 'power2.out', delay: 0.15 });
+          window.gsap.to('.hero-h1 .line-amber', {
+            textShadow: '0 0 30px rgba(242,181,68,0.28)',
+            duration: 3.4,
+            repeat: -1,
+            yoyo: true,
+            ease: 'sine.inOut'
+          });
+        }
+      }
 
       /* ── Retos / Investigación modal ───────────────────── */
       const researchContentMap = {
