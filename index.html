@@ -877,6 +877,217 @@
     .doc-link:hover { background: var(--amber); color: var(--negro); }
 
     /* ═══════════════════════════════════════════════════════════════
+       RETOS / INVESTIGACIÓN
+    ═══════════════════════════════════════════════════════════════ */
+    #retos { background: var(--negro2); }
+    .retos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .reto-card {
+      background: linear-gradient(180deg, rgba(20,20,20,0.95), rgba(13,13,13,0.95));
+      border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .reto-card:hover {
+      border-color: rgba(245,158,11,0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+    }
+    .reto-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(245,158,11,0.12);
+      background: rgba(245,158,11,0.05);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--amber2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .reto-lights {
+      display: inline-flex;
+      gap: 6px;
+    }
+    .reto-lights span {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .reto-lights span:nth-child(1) { background: #ff5f57; }
+    .reto-lights span:nth-child(2) { background: #ffbd2e; }
+    .reto-lights span:nth-child(3) { background: #28c840; }
+    .reto-body {
+      padding: 22px 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .reto-code {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.66rem;
+      color: var(--texto3);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+    }
+    .reto-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--amber3);
+      line-height: 1.6;
+    }
+    .reto-desc {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--texto2);
+      line-height: 1.85;
+    }
+    .reto-action {
+      margin-top: auto;
+      border: 1px solid rgba(245,158,11,0.28);
+      background: rgba(245,158,11,0.08);
+      color: var(--amber);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      padding: 9px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .reto-action:hover {
+      background: var(--amber);
+      color: var(--negro);
+      border-color: var(--amber);
+    }
+
+    .research-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px;
+      background: rgba(0,0,0,0.68);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .research-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .research-panel {
+      width: min(940px, 100%);
+      max-height: min(84vh, 860px);
+      overflow: auto;
+      background: var(--negro2);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: 14px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .research-modal.open .research-panel {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .research-panel-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      background: rgba(5,5,5,0.94);
+      border-bottom: 1px solid rgba(245,158,11,0.12);
+    }
+    .research-panel-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--amber2);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .research-close {
+      border: 1px solid rgba(245,158,11,0.25);
+      background: rgba(245,158,11,0.08);
+      color: var(--amber);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      border-radius: 8px;
+      padding: 8px 11px;
+      cursor: pointer;
+    }
+    .research-close:hover { background: var(--amber); color: var(--negro); }
+    .research-content {
+      padding: 22px;
+      font-family: 'Space Mono', monospace;
+      color: var(--texto);
+      font-size: 0.78rem;
+      line-height: 1.9;
+    }
+    .research-content .r-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: var(--amber);
+      margin-bottom: 8px;
+    }
+    .research-content .r-meta {
+      font-size: 0.68rem;
+      color: var(--texto3);
+      margin-bottom: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .research-content h4 {
+      margin: 20px 0 8px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      color: var(--amber2);
+    }
+    .research-content p { color: var(--texto2); margin-bottom: 10px; }
+    .research-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      border: 1px solid var(--gris2);
+      background: var(--negro3);
+    }
+    .research-content th,
+    .research-content td {
+      border: 1px solid var(--gris2);
+      padding: 8px 10px;
+      text-align: left;
+      font-size: 0.7rem;
+    }
+    .research-content th {
+      color: var(--amber2);
+      background: rgba(245,158,11,0.07);
+      font-weight: 700;
+    }
+    .research-content ul { padding-left: 18px; color: var(--texto2); }
+    .research-content code {
+      color: var(--amber3);
+      background: rgba(245,158,11,0.12);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
        TEAM SECTION
     ═══════════════════════════════════════════════════════════════ */
     #equipo { background: var(--negro2); }
@@ -1195,6 +1406,7 @@
 
       .variables-grid { grid-template-columns: 1fr; }
       .docs-grid { grid-template-columns: 1fr; }
+      .retos-grid { grid-template-columns: 1fr; }
       .team-grid { grid-template-columns: 1fr; }
       .repo-layout { grid-template-columns: 1fr; }
 
@@ -1211,6 +1423,8 @@
 
       .footer-inner { flex-direction: column; gap: 24px; }
       .footer-bottom { flex-direction: column; text-align: center; }
+      .research-modal { padding: 14px; }
+      .research-content { padding: 16px; }
     }
 
     @media (max-width: 480px) {
@@ -1235,6 +1449,7 @@
           <li><a href="#variables">Variables</a></li>
           <li><a href="#arquitectura">Arquitectura</a></li>
           <li><a href="#fases">Fases</a></li>
+          <li><a href="#retos">Retos</a></li>
           <li><a href="#equipo">Equipo</a></li>
           <li><a href="#documentacion">Documentación</a></li>
           <li><a href="https://github.com/jeronimoparra-ai/-Sistema-IoT-de-Monitoreo-Ap-cola" target="_blank" rel="noopener" class="nav-github">GitHub ↗</a></li>
@@ -1248,6 +1463,7 @@
       <a href="#variables" role="menuitem">Variables</a>
       <a href="#arquitectura" role="menuitem">Arquitectura</a>
       <a href="#fases" role="menuitem">Fases</a>
+      <a href="#retos" role="menuitem">Retos</a>
       <a href="#equipo" role="menuitem">Equipo</a>
       <a href="#documentacion" role="menuitem">Documentación</a>
       <a href="https://github.com/jeronimoparra-ai/-Sistema-IoT-de-Monitoreo-Ap-cola" target="_blank" rel="noopener" role="menuitem">GitHub ↗</a>
@@ -1613,11 +1829,52 @@
 
   <div class="section-divider" role="separator"></div>
 
+  <!-- ══════════════════════ RETOS / INVESTIGACIÓN ══════════════════════ -->
+  <section id="retos" aria-labelledby="retos-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">05 · Retos / Investigación</span>
+        <h2 class="section-title" id="retos-heading">Explorador técnico de investigación</h2>
+        <p class="section-subtitle">Contenido de <code>/docs/investigacion</code> transformado en un visor interactivo tipo consola para analizar retos y hallazgos del proyecto.</p>
+      </div>
+
+      <div class="retos-grid">
+        <article class="reto-card reveal reveal-delay-1">
+          <div class="reto-head">
+            <span class="reto-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>DOC · MARCO-TEORICO.MD</span>
+          </div>
+          <div class="reto-body">
+            <div class="reto-code">Tema 01 · Fundamentos</div>
+            <h3 class="reto-title">Marco Teórico: IoT en agricultura y apicultura de precisión</h3>
+            <p class="reto-desc">Base conceptual del sistema: conectividad, sensores, comportamiento bioclimático de <em>Apis mellifera</em> y justificación técnica del uso de ESP32.</p>
+            <button type="button" class="reto-action reto-open" data-research-key="marco-teorico">Abrir visor técnico →</button>
+          </div>
+        </article>
+
+        <article class="reto-card reveal reveal-delay-2">
+          <div class="reto-head">
+            <span class="reto-lights" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>DOC · ESTADO-DEL-ARTE.MD</span>
+          </div>
+          <div class="reto-body">
+            <div class="reto-code">Tema 02 · Benchmark</div>
+            <h3 class="reto-title">Estado del Arte: comparación con sistemas IoT previos</h3>
+            <p class="reto-desc">Revisión de referencias académicas y comparación de tecnologías para ubicar este prototipo dentro de tendencias de apicultura inteligente.</p>
+            <button type="button" class="reto-action reto-open" data-research-key="estado-del-arte">Abrir visor técnico →</button>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" role="separator"></div>
+
   <!-- ══════════════════════ TEAM ══════════════════════ -->
   <section id="equipo" aria-labelledby="equipo-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">05 · Equipo</span>
+        <span class="section-tag">06 · Equipo</span>
         <h2 class="section-title" id="equipo-heading">Quiénes somos</h2>
         <p class="section-subtitle">Equipo de aprendices del SENA comprometido con la innovación tecnológica aplicada al sector apícola del Bajo Cauca antioqueño.</p>
       </div>
@@ -1678,7 +1935,7 @@
   <section id="repo" aria-labelledby="repo-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">06 · Repositorio</span>
+        <span class="section-tag">07 · Repositorio</span>
         <h2 class="section-title" id="repo-heading">Código fuente</h2>
         <p class="section-subtitle">Repositorio público en GitHub. Contribuciones bienvenidas — ver guía de contribución en el README.</p>
       </div>
@@ -1833,6 +2090,7 @@
           <a href="#variables">Variables monitoreadas</a>
           <a href="#arquitectura">Arquitectura del sistema</a>
           <a href="#fases">Roadmap de fases</a>
+          <a href="#retos">Retos / Investigación</a>
           <a href="#documentacion">Documentación</a>
           <a href="#equipo">Equipo</a>
           <a href="#repo">Repositorio</a>
@@ -1866,6 +2124,17 @@
     </div>
   </footer>
 
+  <!-- ══════════════════════ MODAL RETOS / INVESTIGACIÓN ══════════════════════ -->
+  <div class="research-modal" id="research-modal" aria-hidden="true">
+    <article class="research-panel" role="dialog" aria-modal="true" aria-labelledby="research-panel-title">
+      <header class="research-panel-head">
+        <div class="research-panel-title" id="research-panel-title">Visor técnico de investigación</div>
+        <button type="button" class="research-close" id="research-close">Cerrar ✕</button>
+      </header>
+      <div class="research-content" id="research-content"></div>
+    </article>
+  </div>
+
   <!-- ══════════════════════ JAVASCRIPT ══════════════════════ -->
   <script>
     (function () {
@@ -1895,6 +2164,76 @@
           navMobile.classList.remove('open');
           hamburger.setAttribute('aria-expanded', 'false');
         });
+      });
+
+      /* ── Retos / Investigación modal ───────────────────── */
+      const researchContentMap = {
+        'marco-teorico': `
+          <h3 class="r-title">Marco Teórico</h3>
+          <p class="r-meta">Fuente: docs/investigacion/marco-teorico.md</p>
+          <h4>Internet de las Cosas (IoT) en agricultura</h4>
+          <p>El IoT permite integrar sensores, conectividad y plataformas cloud para monitoreo continuo en campo. En apicultura, habilita vigilancia no invasiva, mejora la trazabilidad y acelera decisiones ante condiciones críticas.</p>
+          <h4>Apicultura y variables bioclimáticas</h4>
+          <p><em>Apis mellifera</em> requiere estabilidad interna de temperatura, humedad y ventilación. El desbalance de estas variables afecta desarrollo de cría, rendimiento de miel y comportamiento de enjambrazón.</p>
+          <h4>ESP32 como plataforma IoT</h4>
+          <p>El ESP32 combina capacidad de procesamiento, conectividad WiFi/Bluetooth y bajo costo, haciendo viable una arquitectura académica escalable para prototipos de monitoreo apícola en zonas rurales.</p>
+          <ul>
+            <li>Microcontrolador dual-core con conectividad integrada.</li>
+            <li>Compatible con sensores de temperatura, humedad, peso y calidad del aire.</li>
+            <li>Integración directa con APIs HTTP/MQTT para ThingSpeak.</li>
+          </ul>
+        `,
+        'estado-del-arte': `
+          <h3 class="r-title">Estado del Arte</h3>
+          <p class="r-meta">Fuente: docs/investigacion/estado-del-arte.md</p>
+          <h4>Sistemas de monitoreo apícola existentes</h4>
+          <p>Se analizaron antecedentes académicos en Colombia, Brasil y Europa, identificando arquitecturas IoT no invasivas enfocadas en variables bioclimáticas y automatización del seguimiento del apiario.</p>
+          <h4>Comparación de enfoques</h4>
+          <table>
+            <thead>
+              <tr><th>Característica</th><th>Loaiza 2022</th><th>Silva 2017</th><th>Zabasta 2019</th><th>Este proyecto</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Microcontrolador</td><td>Arduino</td><td>Raspberry Pi</td><td>AVR</td><td><strong>ESP32</strong></td></tr>
+              <tr><td>Conectividad</td><td>WiFi</td><td>WiFi</td><td>LoRa</td><td><strong>WiFi</strong></td></tr>
+              <tr><td>Variables</td><td>T, H</td><td>T, H, Peso</td><td>T, H, Sonido</td><td><strong>T, H, Peso, CO₂</strong></td></tr>
+              <tr><td>Plataforma cloud</td><td>—</td><td>Firebase</td><td>—</td><td><strong>ThingSpeak</strong></td></tr>
+            </tbody>
+          </table>
+          <h4>Hallazgo clave</h4>
+          <p>La combinación ESP32 + ThingSpeak + sensado multivariable ofrece un balance sólido entre costo, complejidad técnica y posibilidad de adopción para el contexto formativo del SENA.</p>
+        `
+      };
+
+      const researchModal = document.getElementById('research-modal');
+      const researchClose = document.getElementById('research-close');
+      const researchContent = document.getElementById('research-content');
+      const researchOpenButtons = document.querySelectorAll('.reto-open');
+
+      const closeResearchModal = () => {
+        researchModal.classList.remove('open');
+        researchModal.setAttribute('aria-hidden', 'true');
+      };
+
+      const openResearchModal = (key) => {
+        const html = researchContentMap[key];
+        if (!html) return;
+        researchContent.innerHTML = html;
+        researchModal.classList.add('open');
+        researchModal.setAttribute('aria-hidden', 'false');
+      };
+
+      researchOpenButtons.forEach(btn => {
+        btn.addEventListener('click', () => openResearchModal(btn.dataset.researchKey));
+      });
+      researchClose.addEventListener('click', closeResearchModal);
+      researchModal.addEventListener('click', (event) => {
+        if (event.target === researchModal) closeResearchModal();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && researchModal.classList.contains('open')) {
+          closeResearchModal();
+        }
       });
 
       /* ── Intersection Observer (scroll reveal) ─────────── */
