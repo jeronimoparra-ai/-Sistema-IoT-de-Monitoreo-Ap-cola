@@ -2407,6 +2407,7 @@
 
       if (docxModal && docxClose && docxFrame && docxOpenNew && docxDownload) {
         const DOCX_FILE_PATH = 'docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx';
+        // Se calcula desde la URL actual del sitio para no acoplarlo a una rama fija del repositorio.
         const DOCX_PUBLIC_URL = new URL(DOCX_FILE_PATH, window.location.href).toString();
         const OFFICE_VIEWER_URL = `https://view.officeapps.live.com/op/view.aspx?src=${encodeURIComponent(DOCX_PUBLIC_URL)}`;
         let lastFocusedElement = null;
