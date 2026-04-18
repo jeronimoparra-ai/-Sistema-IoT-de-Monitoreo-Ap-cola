@@ -4,7 +4,7 @@
 > **Muestra:** 568 respuestas  
 > **Formulario:** [https://forms.gle/Qqzvm7dRmz46oWA27](https://forms.gle/Qqzvm7dRmz46oWA27)  
 > **Período:** 2025 – 2026  
-> **Contexto:** Centro de Formación Ambiental SENA, Caucasia, Antioquia
+> **Contexto:** Centro de Formación Ambiental SENA, El Bagre, Antioquia
 
 ---
 

@@ -42,7 +42,7 @@
 
 ## 📖 Descripción
 
-Sistema automatizado de monitoreo continuo de variables bioclimáticas aplicado al seguimiento de colmenas de *Apis mellifera* en el Centro de Formación Ambiental del SENA, Caucasia, Antioquia. El sistema integra sensores electrónicos que miden temperatura, humedad, peso y CO₂ en tiempo real mediante un microcontrolador **ESP32**, transmitiendo los datos a la plataforma **ThingSpeak** y visualizándolos en dashboards interactivos accesibles desde cualquier dispositivo.
+Sistema automatizado de monitoreo continuo de variables bioclimáticas aplicado al seguimiento de colmenas de *Apis mellifera* en el Centro de Formación Ambiental del SENA, El Bagre, Antioquia. El sistema integra sensores electrónicos que miden temperatura, humedad, peso y CO₂ en tiempo real mediante un microcontrolador **ESP32**, transmitiendo los datos a la plataforma **ThingSpeak** y visualizándolos en dashboards interactivos accesibles desde cualquier dispositivo.
 
 ---
 
