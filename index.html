@@ -863,6 +863,346 @@
     .tech-pill:hover { border-color: rgba(245,158,11,0.35); color: var(--amber3); background: var(--amber-glow); }
 
     /* ═══════════════════════════════════════════════════════════════
+       PROTOTYPE SHOWCASE
+    ═══════════════════════════════════════════════════════════════ */
+    #prototipo { background: var(--negro2); }
+
+    .proto-showcase {
+      background: linear-gradient(180deg, rgba(22,22,22,0.96), rgba(10,10,10,0.96));
+      border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 18px;
+      padding: clamp(18px, 3vw, 34px);
+      box-shadow: 0 22px 50px rgba(0,0,0,0.35);
+      display: grid;
+      gap: 20px;
+    }
+    .proto-stage {
+      position: relative;
+      border-radius: 14px;
+      border: 1px solid rgba(245,158,11,0.2);
+      background: radial-gradient(circle at top, rgba(245,158,11,0.09), rgba(0,0,0,0) 58%), var(--negro3);
+      padding: clamp(12px, 2vw, 18px);
+      overflow: hidden;
+    }
+    .proto-main-wrap {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+    .proto-nav {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(245,158,11,0.34);
+      background: rgba(245,158,11,0.1);
+      color: var(--amber);
+      font-size: 1.18rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+    .proto-nav:hover {
+      background: var(--amber);
+      color: var(--negro);
+      transform: translateY(-2px);
+      border-color: var(--amber);
+    }
+    .proto-nav:focus-visible,
+    .proto-main-media:focus-visible,
+    .proto-thumb:focus-visible,
+    .proto-open-viewer:focus-visible,
+    .proto-modal-close:focus-visible,
+    .proto-modal-nav:focus-visible,
+    .proto-modal-thumb:focus-visible {
+      outline: 2px solid var(--amber2);
+      outline-offset: 2px;
+    }
+    .proto-main-media {
+      border: 1px solid rgba(245,158,11,0.24);
+      background: linear-gradient(180deg, rgba(245,158,11,0.03), rgba(255,255,255,0));
+      border-radius: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      width: 100%;
+      min-height: clamp(260px, 42vw, 560px);
+      display: grid;
+      place-items: center;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+    .proto-main-media:hover {
+      border-color: rgba(245,158,11,0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.36);
+    }
+    .proto-main-media img {
+      width: 100%;
+      height: clamp(260px, 42vw, 560px);
+      object-fit: contain;
+      transition: opacity 0.25s ease, transform 0.3s ease;
+    }
+    .proto-main-media:hover img { transform: scale(1.015); }
+    .proto-main-media.is-swapping img,
+    .proto-modal-figure.is-swapping img {
+      opacity: 0.78;
+      transform: scale(0.985);
+    }
+    .proto-click-hint {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--amber3);
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 100px;
+      padding: 4px 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .proto-meta {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .proto-caption {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--texto2);
+      line-height: 1.8;
+    }
+    .proto-caption strong {
+      color: var(--amber2);
+      font-weight: 700;
+    }
+    .proto-open-viewer {
+      border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.12);
+      color: var(--amber);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      flex-shrink: 0;
+    }
+    .proto-open-viewer:hover {
+      background: var(--amber);
+      color: var(--negro);
+      border-color: var(--amber);
+    }
+    .proto-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .proto-thumb {
+      border: 1px solid rgba(245,158,11,0.22);
+      border-radius: 10px;
+      background: var(--negro3);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, background 0.2s;
+      text-align: left;
+    }
+    .proto-thumb:hover { transform: translateY(-2px); border-color: rgba(245,158,11,0.44); }
+    .proto-thumb img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+    }
+    .proto-thumb-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--texto2);
+      line-height: 1.6;
+    }
+    .proto-thumb.is-active {
+      border-color: rgba(245,158,11,0.68);
+      background: rgba(245,158,11,0.08);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+    .proto-thumb.is-active .proto-thumb-label { color: var(--amber2); }
+
+    .proto-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1270;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(0,0,0,0.74);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+    .proto-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .proto-modal-panel {
+      width: min(1080px, 100%);
+      max-height: min(92vh, 980px);
+      border-radius: 16px;
+      border: 1px solid rgba(245,158,11,0.28);
+      background: var(--negro2);
+      box-shadow: 0 24px 56px rgba(0,0,0,0.5);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .proto-modal.open .proto-modal-panel {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .proto-modal-head {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(245,158,11,0.16);
+      background: rgba(5,5,5,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .proto-modal-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--amber2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .proto-modal-close {
+      border: 1px solid rgba(245,158,11,0.26);
+      background: rgba(245,158,11,0.08);
+      color: var(--amber);
+      border-radius: 8px;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      padding: 8px 11px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .proto-modal-close:hover {
+      background: var(--amber);
+      color: var(--negro);
+    }
+    .proto-modal-body {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      overflow: auto;
+    }
+    .proto-modal-nav {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(245,158,11,0.3);
+      background: rgba(245,158,11,0.08);
+      color: var(--amber);
+      font-size: 1.08rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.2s;
+      flex-shrink: 0;
+    }
+    .proto-modal-nav:hover {
+      background: var(--amber);
+      color: var(--negro);
+      transform: translateY(-2px);
+    }
+    .proto-modal-figure {
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 12px;
+      background: var(--negro3);
+      overflow: hidden;
+      min-height: clamp(300px, 66vh, 760px);
+      display: grid;
+      grid-template-rows: 1fr auto;
+    }
+    .proto-modal-figure img {
+      width: 100%;
+      height: clamp(260px, 63vh, 690px);
+      object-fit: contain;
+      background: radial-gradient(circle at top, rgba(245,158,11,0.08), rgba(255,255,255,0) 60%);
+      transition: opacity 0.25s ease, transform 0.3s ease;
+    }
+    .proto-modal-caption {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--texto2);
+      line-height: 1.8;
+      border-top: 1px solid rgba(245,158,11,0.12);
+      padding: 10px 12px;
+    }
+    .proto-modal-thumbs {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid rgba(245,158,11,0.14);
+      background: rgba(255,255,255,0.01);
+    }
+    .proto-modal-thumb {
+      border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 8px;
+      background: var(--negro3);
+      padding: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .proto-modal-thumb:hover {
+      transform: translateY(-2px);
+      border-color: rgba(245,158,11,0.42);
+    }
+    .proto-modal-thumb img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: contain;
+      border-radius: 6px;
+      display: block;
+    }
+    .proto-modal-thumb.is-active {
+      border-color: rgba(245,158,11,0.66);
+      background: rgba(245,158,11,0.06);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .proto-main-media,
+      .proto-thumb,
+      .proto-nav,
+      .proto-open-viewer,
+      .proto-modal,
+      .proto-modal-panel,
+      .proto-modal-nav,
+      .proto-modal-thumb {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
        PHASES / ROADMAP
     ═══════════════════════════════════════════════════════════════ */
     #fases { background: var(--negro2); }
@@ -1723,6 +2063,18 @@
       .nav-links { gap: 14px; }
       .nav-links a { font-size: 0.67rem; }
       .repo-layout { grid-template-columns: 1fr; }
+      .proto-main-wrap {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .proto-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+      }
+      .proto-nav:hover { transform: translateY(calc(-50% - 2px)); }
+      .proto-nav.prev { left: 14px; }
+      .proto-nav.next { right: 14px; }
       .docs-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
       .retos-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
       .team-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
@@ -1778,6 +2130,24 @@
       }
 
       .variables-grid { grid-template-columns: 1fr; }
+      .proto-showcase { padding: 14px; }
+      .proto-main-media img { height: clamp(240px, 68vw, 440px); }
+      .proto-main-media { min-height: clamp(240px, 68vw, 440px); }
+      .proto-thumbs { grid-template-columns: 1fr; }
+      .proto-thumb { padding: 7px; }
+      .proto-meta { align-items: stretch; }
+      .proto-open-viewer { width: 100%; min-height: 44px; }
+      .proto-modal-body { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+      .proto-modal-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 2;
+      }
+      .proto-modal-nav.prev { left: 10px; }
+      .proto-modal-nav.next { right: 10px; }
+      .proto-modal-figure img { height: clamp(240px, 58vh, 520px); }
+      .proto-modal-thumbs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .docs-grid { grid-template-columns: 1fr; }
       .retos-grid { grid-template-columns: 1fr; }
       .team-grid { grid-template-columns: 1fr; }
@@ -1850,6 +2220,7 @@
         <ul class="nav-links" role="list">
           <li><a href="#variables">Variables</a></li>
           <li><a href="docs/arquitectura/Arquitectura.png" target="_blank" rel="noopener" aria-label="Abrir imagen PNG de Arquitectura (nueva pestaña)">Arquitectura</a></li>
+          <li><a href="#prototipo">Prototipo</a></li>
           <li><a href="#fases">Fases</a></li>
           <li><a href="#retos">Retos</a></li>
           <li><a href="#equipo">Equipo</a></li>
@@ -1864,6 +2235,7 @@
     <div class="nav-mobile" id="nav-mobile" role="menu">
       <a href="#variables" role="menuitem">Variables</a>
       <a href="docs/arquitectura/Arquitectura.png" target="_blank" rel="noopener" role="menuitem" aria-label="Abrir imagen PNG de Arquitectura (nueva pestaña)">Arquitectura</a>
+      <a href="#prototipo" role="menuitem">Prototipo</a>
       <a href="#fases" role="menuitem">Fases</a>
       <a href="#retos" role="menuitem">Retos</a>
       <a href="#equipo" role="menuitem">Equipo</a>
@@ -2080,11 +2452,57 @@
 
   <div class="section-divider" role="separator"></div>
 
+  <!-- ══════════════════════ PROTOTYPE SHOWCASE ══════════════════════ -->
+  <section id="prototipo" aria-labelledby="prototipo-heading">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">03 · Prototipo físico</span>
+        <h2 class="section-title" id="prototipo-heading">Showcase técnico BeeStation</h2>
+        <p class="section-subtitle">Vista interactiva del prototipo físico para documentar su diseño externo e integración interna de hardware IoT.</p>
+      </div>
+
+      <div class="proto-showcase reveal reveal-delay-1">
+        <div class="proto-stage">
+          <div class="proto-main-wrap">
+            <button type="button" class="proto-nav prev" id="proto-prev" aria-label="Ver imagen anterior del prototipo">‹</button>
+            <button type="button" class="proto-main-media" id="proto-main-trigger" aria-label="Cambiar a la siguiente imagen del prototipo">
+              <img id="proto-main-image" src="docs/arquitectura/Proto_Caja.png" alt="Vista superior del prototipo BeeStation con cubierta de panal y abeja 3D" loading="lazy">
+              <span class="proto-click-hint" aria-hidden="true">Clic para avanzar</span>
+            </button>
+            <button type="button" class="proto-nav next" id="proto-next" aria-label="Ver imagen siguiente del prototipo">›</button>
+          </div>
+
+          <div class="proto-meta">
+            <p class="proto-caption" id="proto-main-caption" aria-live="polite"><strong>Vista superior del prototipo</strong> · Caja de protección externa y diseño frontal del módulo.</p>
+            <button type="button" class="proto-open-viewer" id="proto-open-modal" aria-haspopup="dialog">Abrir visor ampliado ↗</button>
+          </div>
+        </div>
+
+        <div class="proto-thumbs" role="list" aria-label="Miniaturas del prototipo">
+          <button type="button" class="proto-thumb is-active" data-proto-index="0" aria-pressed="true">
+            <img src="docs/arquitectura/Proto_Caja.png" alt="Miniatura: vista superior del prototipo BeeStation" loading="lazy">
+            <span class="proto-thumb-label">Vista superior del prototipo</span>
+          </button>
+          <button type="button" class="proto-thumb" data-proto-index="1" aria-pressed="false">
+            <img src="docs/arquitectura/Protoitpo_Estcr.png" alt="Miniatura: vista lateral del prototipo BeeStation" loading="lazy">
+            <span class="proto-thumb-label">Vista lateral del prototipo</span>
+          </button>
+          <button type="button" class="proto-thumb" data-proto-index="2" aria-pressed="false">
+            <img src="docs/arquitectura/Sistema_iNTR.png" alt="Miniatura: vista interna del sistema BeeStation" loading="lazy">
+            <span class="proto-thumb-label">Vista interna del sistema</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider" role="separator"></div>
+
   <!-- ══════════════════════ PHASES ══════════════════════ -->
   <section id="fases" aria-labelledby="fases-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">03 · Roadmap</span>
+        <span class="section-tag">04 · Roadmap</span>
         <h2 class="section-title" id="fases-heading">Fases del proyecto</h2>
         <p class="section-subtitle">Plan de desarrollo organizado en 7 fases desde la investigación inicial hasta la publicación académica.</p>
       </div>
@@ -2169,7 +2587,7 @@
   <section id="documentacion" aria-labelledby="documentacion-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">04 · Documentación</span>
+        <span class="section-tag">05 · Documentación</span>
         <h2 class="section-title" id="documentacion-heading">Recursos del proyecto</h2>
         <p class="section-subtitle">Documentación técnica y académica generada a lo largo del desarrollo del sistema IoT Apícola.</p>
       </div>
@@ -2244,7 +2662,7 @@
   <section id="retos" aria-labelledby="retos-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">05 · Retos / Investigación</span>
+        <span class="section-tag">06 · Retos / Investigación</span>
         <h2 class="section-title" id="retos-heading">Explorador técnico de investigación</h2>
         <p class="section-subtitle">Contenido de <code>/docs/investigacion</code> transformado en un visor interactivo tipo consola para analizar retos y hallazgos del proyecto.</p>
       </div>
@@ -2457,6 +2875,7 @@
           <h4>Navegación</h4>
           <a href="#variables">Variables monitoreadas</a>
           <a href="docs/arquitectura/Arquitectura.png" target="_blank" rel="noopener" aria-label="Abrir imagen PNG de arquitectura del sistema">Arquitectura del sistema</a>
+          <a href="#prototipo">Showcase del prototipo</a>
           <a href="#fases">Roadmap de fases</a>
           <a href="#retos">Retos / Investigación</a>
           <a href="#documentacion">Documentación</a>
@@ -2491,6 +2910,37 @@
       </div>
     </div>
   </footer>
+
+  <!-- ══════════════════════ MODAL RETOS / INVESTIGACIÓN ══════════════════════ -->
+  <div class="proto-modal" id="proto-modal" aria-hidden="true">
+    <article class="proto-modal-panel" role="dialog" aria-modal="true" aria-labelledby="proto-modal-title">
+      <header class="proto-modal-head">
+        <h3 class="proto-modal-title" id="proto-modal-title">Visor de prototipo BeeStation</h3>
+        <button type="button" class="proto-modal-close" id="proto-modal-close">Cerrar ✕</button>
+      </header>
+
+      <div class="proto-modal-body">
+        <button type="button" class="proto-modal-nav prev" id="proto-modal-prev" aria-label="Ver imagen anterior">‹</button>
+        <figure class="proto-modal-figure" id="proto-modal-figure">
+          <img id="proto-modal-image" src="docs/arquitectura/Proto_Caja.png" alt="Vista superior del prototipo BeeStation con cubierta de panal y abeja 3D" loading="lazy">
+          <figcaption class="proto-modal-caption" id="proto-modal-caption">Vista superior del prototipo · Caja de protección externa y diseño frontal del módulo.</figcaption>
+        </figure>
+        <button type="button" class="proto-modal-nav next" id="proto-modal-next" aria-label="Ver imagen siguiente">›</button>
+      </div>
+
+      <div class="proto-modal-thumbs" role="list" aria-label="Miniaturas del visor de prototipo">
+        <button type="button" class="proto-modal-thumb is-active" data-proto-modal-index="0" aria-pressed="true">
+          <img src="docs/arquitectura/Proto_Caja.png" alt="Miniatura ampliada: vista superior del prototipo BeeStation" loading="lazy">
+        </button>
+        <button type="button" class="proto-modal-thumb" data-proto-modal-index="1" aria-pressed="false">
+          <img src="docs/arquitectura/Protoitpo_Estcr.png" alt="Miniatura ampliada: vista lateral del prototipo BeeStation" loading="lazy">
+        </button>
+        <button type="button" class="proto-modal-thumb" data-proto-modal-index="2" aria-pressed="false">
+          <img src="docs/arquitectura/Sistema_iNTR.png" alt="Miniatura ampliada: vista interna del sistema BeeStation" loading="lazy">
+        </button>
+      </div>
+    </article>
+  </div>
 
   <!-- ══════════════════════ MODAL RETOS / INVESTIGACIÓN ══════════════════════ -->
   <div class="research-modal" id="research-modal" aria-hidden="true">
@@ -2798,6 +3248,195 @@
             }
           }
         });
+      }
+
+      /* ── Prototipo físico: showcase + modal ────────────── */
+      const protoAssets = [
+        {
+          src: 'docs/arquitectura/Proto_Caja.png',
+          alt: 'Vista superior del prototipo BeeStation con cubierta de panal y abeja 3D',
+          label: 'Vista superior del prototipo',
+          detail: 'Caja de protección externa y diseño frontal del módulo.'
+        },
+        {
+          src: 'docs/arquitectura/Protoitpo_Estcr.png',
+          alt: 'Vista lateral del prototipo BeeStation mostrando su estructura física',
+          label: 'Vista lateral del prototipo',
+          detail: 'Perfil estructural del encapsulado y acabado del cuerpo.'
+        },
+        {
+          src: 'docs/arquitectura/Sistema_iNTR.png',
+          alt: 'Vista interna del sistema BeeStation con los componentes electrónicos',
+          label: 'Vista interna del sistema',
+          detail: 'Distribución interna de los componentes electrónicos y cableado.'
+        }
+      ];
+
+      const protoMainImage = document.getElementById('proto-main-image');
+      const protoMainTrigger = document.getElementById('proto-main-trigger');
+      const protoMainCaption = document.getElementById('proto-main-caption');
+      const protoPrev = document.getElementById('proto-prev');
+      const protoNext = document.getElementById('proto-next');
+      const protoThumbs = document.querySelectorAll('.proto-thumb');
+      const protoOpenModalBtn = document.getElementById('proto-open-modal');
+
+      const protoModal = document.getElementById('proto-modal');
+      const protoModalClose = document.getElementById('proto-modal-close');
+      const protoModalPrev = document.getElementById('proto-modal-prev');
+      const protoModalNext = document.getElementById('proto-modal-next');
+      const protoModalImage = document.getElementById('proto-modal-image');
+      const protoModalCaption = document.getElementById('proto-modal-caption');
+      const protoModalFigure = document.getElementById('proto-modal-figure');
+      const protoModalThumbs = document.querySelectorAll('.proto-modal-thumb');
+
+      if (
+        protoMainImage && protoMainTrigger && protoMainCaption &&
+        protoPrev && protoNext && protoThumbs.length &&
+        protoOpenModalBtn && protoModal && protoModalClose &&
+        protoModalPrev && protoModalNext && protoModalImage &&
+        protoModalCaption && protoModalFigure && protoModalThumbs.length
+      ) {
+        let protoIndex = 0;
+        let lastProtoFocus = null;
+
+        const animateSwap = (el) => {
+          el.classList.add('is-swapping');
+          window.setTimeout(() => el.classList.remove('is-swapping'), 180);
+        };
+
+        const setProtoThumbState = (thumbs, index, activeClass) => {
+          thumbs.forEach((thumb, i) => {
+            const active = i === index;
+            thumb.classList.toggle(activeClass, active);
+            thumb.setAttribute('aria-pressed', String(active));
+          });
+        };
+
+        const renderProto = (index, animate = false) => {
+          const safeIndex = (index + protoAssets.length) % protoAssets.length;
+          protoIndex = safeIndex;
+          const asset = protoAssets[safeIndex];
+
+          if (animate) {
+            animateSwap(protoMainTrigger);
+            if (protoModal.classList.contains('open')) animateSwap(protoModalFigure);
+          }
+
+          protoMainImage.src = asset.src;
+          protoMainImage.alt = asset.alt;
+          protoMainCaption.innerHTML = `<strong>${asset.label}</strong> · ${asset.detail}`;
+
+          protoModalImage.src = asset.src;
+          protoModalImage.alt = asset.alt;
+          protoModalCaption.textContent = `${asset.label} · ${asset.detail}`;
+
+          setProtoThumbState(protoThumbs, safeIndex, 'is-active');
+          setProtoThumbState(protoModalThumbs, safeIndex, 'is-active');
+        };
+
+        const nextProto = () => renderProto(protoIndex + 1, true);
+        const prevProtoSlide = () => renderProto(protoIndex - 1, true);
+
+        const openProtoModal = () => {
+          lastProtoFocus = document.activeElement;
+          protoModal.classList.add('open');
+          protoModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          protoModalClose.focus();
+        };
+
+        const closeProtoModal = () => {
+          protoModal.classList.remove('open');
+          protoModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if (lastProtoFocus && typeof lastProtoFocus.focus === 'function') {
+            lastProtoFocus.focus();
+          }
+        };
+
+        protoPrev.addEventListener('click', prevProtoSlide);
+        protoNext.addEventListener('click', nextProto);
+        protoMainTrigger.addEventListener('click', nextProto);
+        protoOpenModalBtn.addEventListener('click', openProtoModal);
+
+        protoThumbs.forEach((thumb) => {
+          thumb.addEventListener('click', () => {
+            const idx = Number(thumb.dataset.protoIndex);
+            if (Number.isNaN(idx)) return;
+            renderProto(idx, true);
+          });
+        });
+
+        protoModalClose.addEventListener('click', closeProtoModal);
+        protoModalPrev.addEventListener('click', prevProtoSlide);
+        protoModalNext.addEventListener('click', nextProto);
+        protoModal.addEventListener('click', (event) => {
+          if (event.target === protoModal) closeProtoModal();
+        });
+
+        protoModalThumbs.forEach((thumb) => {
+          thumb.addEventListener('click', () => {
+            const idx = Number(thumb.dataset.protoModalIndex);
+            if (Number.isNaN(idx)) return;
+            renderProto(idx, true);
+          });
+        });
+
+        const attachSwipe = (element, onPrev, onNext) => {
+          let startX = null;
+          element.addEventListener('touchstart', (event) => {
+            startX = event.changedTouches[0]?.clientX ?? null;
+          }, { passive: true });
+          element.addEventListener('touchend', (event) => {
+            if (startX === null) return;
+            const endX = event.changedTouches[0]?.clientX ?? startX;
+            const delta = endX - startX;
+            startX = null;
+            if (Math.abs(delta) < 40) return;
+            if (delta > 0) onPrev(); else onNext();
+          }, { passive: true });
+        };
+
+        attachSwipe(protoMainTrigger, prevProtoSlide, nextProto);
+        attachSwipe(protoModalFigure, prevProtoSlide, nextProto);
+
+        document.addEventListener('keydown', (event) => {
+          if (protoModal.classList.contains('open')) {
+            if (event.key === 'Escape') {
+              closeProtoModal();
+              return;
+            }
+            if (event.key === 'ArrowLeft') {
+              prevProtoSlide();
+              return;
+            }
+            if (event.key === 'ArrowRight') {
+              nextProto();
+              return;
+            }
+            if (event.key === 'Tab') {
+              const focusable = protoModal.querySelectorAll('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])');
+              if (!focusable.length) return;
+              const first = focusable[0];
+              const last = focusable[focusable.length - 1];
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }
+            return;
+          }
+
+          if (document.activeElement === protoMainTrigger || document.activeElement === protoPrev || document.activeElement === protoNext) {
+            if (event.key === 'ArrowLeft') prevProtoSlide();
+            if (event.key === 'ArrowRight') nextProto();
+          }
+        });
+
+        renderProto(0);
       }
 
       /* ── Intersection Observer (scroll reveal) ─────────── */
