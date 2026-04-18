@@ -118,6 +118,59 @@
     }
     .section-header { margin-bottom: 56px; }
 
+    /* ─── CV profile block (Quién Soy) ───────────────────────────── */
+    .cv-profile {
+      margin: 0 auto;
+      max-width: 980px;
+      padding: clamp(28px, 4vw, 46px) clamp(24px, 4vw, 52px);
+      border: 1px solid rgba(242,181,68,0.2);
+      border-left: 4px solid rgba(242,181,68,0.75);
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(10,14,22,0.96), rgba(10,14,22,0.84));
+      box-shadow: 0 22px 48px rgba(0,0,0,0.28);
+    }
+    .cv-profile-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 18px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(242,181,68,0.22);
+      margin-bottom: 18px;
+    }
+    .cv-profile-line {
+      width: clamp(58px, 9vw, 96px);
+      height: 1px;
+      border-radius: 999px;
+      background: rgba(203,213,225,0.45);
+      flex-shrink: 0;
+    }
+    .cv-profile-accent {
+      width: clamp(56px, 8vw, 90px);
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(242,181,68,0.95), rgba(242,181,68,0.24));
+      flex-shrink: 0;
+    }
+    .cv-profile-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 3.8vw, 2.8rem);
+      font-weight: 800;
+      color: var(--texto);
+      line-height: 1.1;
+      letter-spacing: 0.005em;
+      margin: 0 0 12px;
+    }
+    .cv-profile-name {
+      margin: 0;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #edf1f8;
+      overflow-wrap: anywhere;
+    }
+
     section { padding: 100px 0; position: relative; z-index: 1; }
 
     /* ─── Reveal animation ──────────────────────────────────────── */
@@ -1701,6 +1754,12 @@
       .bee-swarm { inset: -22px -28px -18px; }
       .section-title { font-size: clamp(1.7rem, 7vw, 2.4rem); }
       .section-header { margin-bottom: 38px; }
+      .cv-profile { padding: 24px 18px; border-radius: 14px; }
+      .cv-profile-head { margin-bottom: 14px; padding-bottom: 14px; }
+      .cv-profile-line { width: 50px; }
+      .cv-profile-accent { width: 52px; }
+      .cv-profile-title { margin-bottom: 10px; }
+      .cv-profile-name { font-size: clamp(0.92rem, 4vw, 1.05rem); }
 
       .hero-stats {
         display: grid;
@@ -2226,9 +2285,14 @@
   <section id="equipo" aria-labelledby="equipo-heading">
     <div class="container">
       <div class="section-header reveal">
-        <span class="section-tag">06 · Equipo</span>
-        <h2 class="section-title" id="equipo-heading">¿Quién Soy?</h2>
-        <p class="section-subtitle">Andres Jeronimo Parra Bastidas</p>
+        <article class="cv-profile" aria-label="Perfil profesional">
+          <div class="cv-profile-head" aria-hidden="true">
+            <span class="cv-profile-line"></span>
+            <span class="cv-profile-accent"></span>
+          </div>
+          <h2 class="cv-profile-title" id="equipo-heading">¿Quién Soy?</h2>
+          <p class="cv-profile-name">Andres Jeronimo Parra Bastidas</p>
+        </article>
       </div>
     </div>
   </section>
