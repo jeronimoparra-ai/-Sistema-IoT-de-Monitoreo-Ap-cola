@@ -306,8 +306,7 @@ Investigación aplicada con enfoque mixto basada en **DSR** (Design Science Rese
 | Nombre | Rol | GitHub |
 |---|---|---|
 | Andres Jeronimo Parra Bastidas | Investigador principal / Desarrollador | [@jeronimoparra-ai](https://github.com/jeronimoparra-ai) |
-| Samuel Montoya Suarez | Investigador / Hardware | — |
-| Diego Noriega Vega | Investigador / Documentación | — |
+
 
 **Institución:** SENA · **Programa:** Programación de Software · **Ficha:** 3412544 · **Instructor:** Farley Gonzalez
 
