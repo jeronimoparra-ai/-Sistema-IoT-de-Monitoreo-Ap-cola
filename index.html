@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="BeeStation: bitácora de campo para monitoreo bioclimático de colmenas con ESP32 y ThingSpeak." />
+  <title>BeeStation · Bitácora de campo apícola</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500..700,0..100&family=Public+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #f1e9d8;
+      --paper2: #e7dcc2;
+      --paper-edge: #d9caa4;
+      --ink: #211d15;
+      --ink2: #55503f;
+      --ink3: #8b8570;
+      --honey: #b9781e;
+      --honey-deep: #8a5a15;
+      --moss: #545f3c;
+      --rust: #953a22;
+      --line: #c7b98e;
+      --cloud: #171412;
+      --maxw: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Public Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background: repeating-linear-gradient(
+        to bottom,
+        var(--paper) 0,
+        var(--paper) 30px,
+        rgba(139, 133, 112, 0.16) 31px,
+        var(--paper) 32px
+      );
+      line-height: 1.55;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    main { overflow: hidden; }
+
+    :focus-visible {
+      outline: 2px solid var(--honey);
+      outline-offset: 3px;
+    }
+
+    .container {
+      width: min(var(--maxw), calc(100% - 2.6rem));
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 40;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 92%, white 8%);
+    }
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 1rem;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: .55rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+    .brand-mark {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--ink2);
+      display: grid;
+      place-items: center;
+      font-size: .85rem;
+      background: var(--paper2);
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+      gap: 1rem;
+      padding: 0;
+      margin: 0;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      text-decoration: none;
+      font-size: .94rem;
+      color: var(--ink2);
+    }
+    .nav-links a:hover { color: var(--honey-deep); }
+
+    .repo-btn {
+      border: 1px solid var(--ink);
+      background: transparent;
+      padding: .45rem .75rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .menu-btn {
+      display: none;
+      border: 1px solid var(--ink2);
+      background: transparent;
+      width: 42px;
+      height: 38px;
+      padding: 0;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .menu-btn span,
+    .menu-btn::before,
+    .menu-btn::after {
+      content: "";
+      width: 18px;
+      height: 1px;
+      background: var(--ink);
+      position: absolute;
+      transition: .2s ease;
+    }
+    .menu-btn span { position: static; }
+    .menu-btn::before { transform: translateY(-6px); }
+    .menu-btn::after { transform: translateY(6px); }
+    .menu-btn[aria-expanded="true"] span { opacity: 0; }
+    .menu-btn[aria-expanded="true"]::before { transform: rotate(45deg); }
+    .menu-btn[aria-expanded="true"]::after { transform: rotate(-45deg); }
+
+    .mobile-nav {
+      display: none;
+      border-top: 1px solid var(--line);
+      padding: .5rem 0 1rem;
+    }
+    .mobile-nav.open { display: block; }
+    .mobile-nav a {
+      display: block;
+      text-decoration: none;
+      padding: .55rem 0;
+      color: var(--ink2);
+    }
+
+    section { padding: 5.2rem 0; }
+    #hero { padding-top: 7.8rem; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .eyebrow {
+      color: var(--ink2);
+      font-size: .92rem;
+      margin-bottom: .9rem;
+    }
+    h1, h2, h3 {
+      font-family: "Fraunces", Georgia, serif;
+      line-height: 1.15;
+      margin: 0;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      margin-bottom: .9rem;
+    }
+    h2 { font-size: clamp(1.5rem, 3vw, 2.3rem); margin-bottom: .95rem; }
+    .hero-copy p { color: var(--ink2); max-width: 62ch; margin-top: 0; }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .8rem;
+      margin-top: 1.2rem;
+    }
+    .btn {
+      display: inline-block;
+      border: 1px solid var(--ink);
+      text-decoration: none;
+      padding: .62rem .95rem;
+      font-weight: 600;
+    }
+    .btn.primary {
+      border-color: var(--honey-deep);
+      background: var(--honey);
+      color: #fff;
+    }
+    .btn:hover { filter: brightness(.95); }
+
+    .specimen {
+      border: 1px solid var(--line);
+      background: var(--paper2);
+      padding: .95rem;
+    }
+    .frame {
+      border: 1px solid var(--paper-edge);
+      padding: .55rem;
+      background: #efe3c9;
+    }
+    .caption {
+      font-size: .84rem;
+      color: var(--ink2);
+      margin-top: .45rem;
+    }
+    .caption strong { font-family: "Space Mono", monospace; color: var(--ink); }
+
+    .readings {
+      margin-top: .9rem;
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .4rem 1rem;
+      padding-top: .8rem;
+    }
+    .reading { border-bottom: 1px dashed var(--line); padding-bottom: .35rem; }
+    .reading dt {
+      font-size: .8rem;
+      color: var(--ink3);
+      margin-bottom: .15rem;
+    }
+    .reading dd {
+      margin: 0;
+      font-family: "Space Mono", monospace;
+      color: var(--ink);
+      font-size: .96rem;
+    }
+
+    .hero-reveal {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(14px);
+      animation: hero-in .8s ease forwards;
+    }
+    @keyframes hero-in {
+      to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+      }
+    }
+
+    .section-intro { max-width: 75ch; color: var(--ink2); margin-bottom: 1.2rem; }
+
+    .ledger {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--line);
+      background: rgba(231, 220, 194, 0.5);
+    }
+    .ledger th,
+    .ledger td {
+      border-bottom: 1px solid var(--line);
+      padding: .85rem .7rem;
+      vertical-align: top;
+      text-align: left;
+    }
+    .ledger th {
+      font-family: "Fraunces", serif;
+      font-weight: 600;
+      background: rgba(217, 202, 164, 0.24);
+    }
+    .sensor-chip {
+      display: inline-block;
+      font-family: "Space Mono", monospace;
+      border: 1px solid var(--line);
+      padding: .12rem .42rem;
+      font-size: .73rem;
+      margin-top: .38rem;
+      color: var(--ink2);
+    }
+    .range {
+      max-width: 240px;
+    }
+    .bar {
+      --pct: 50%;
+      height: 8px;
+      border: 1px solid var(--paper-edge);
+      background: linear-gradient(to right, var(--paper) 0 var(--pct), var(--honey) var(--pct));
+      margin-bottom: .35rem;
+    }
+    .range p { margin: 0; font-family: "Space Mono", monospace; font-size: .75rem; color: var(--ink2); }
+
+    .arch-box {
+      border: 1px solid var(--line);
+      padding: 1.2rem;
+      background: var(--paper2);
+    }
+    .flow {
+      display: grid;
+      gap: .7rem;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      align-items: center;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .node {
+      border: 1px solid var(--paper-edge);
+      padding: .72rem .45rem;
+      background: rgba(255,255,255,.18);
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+      font-size: .9rem;
+      color: var(--ink2);
+    }
+    .node strong { color: var(--ink); font-family: "Space Mono", monospace; font-size: .8rem; }
+    .node.cloud { background: var(--cloud); color: #efeadb; border-color: #000; }
+    .arrow { text-align: center; color: var(--ink3); font-family: "Space Mono", monospace; }
+    .stack-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .stack-tags li {
+      border: 1px solid var(--line);
+      padding: .32rem .5rem;
+      font-size: .8rem;
+      background: rgba(241,233,216,0.6);
+      color: var(--ink2);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .photo {
+      background: #f4ecd9;
+      border: 1px solid var(--paper-edge);
+      padding: .55rem;
+      box-shadow: 0 3px 8px rgba(33,29,21,.15);
+      position: relative;
+      cursor: pointer;
+    }
+    .photo::before {
+      content: "";
+      position: absolute;
+      width: 56px;
+      height: 15px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(199,185,142,.8);
+      top: -8px;
+      left: calc(50% - 28px);
+      transform: rotate(-5deg);
+    }
+    .photo:nth-child(1) { transform: rotate(-1.5deg); }
+    .photo:nth-child(2) { transform: rotate(1.2deg); }
+    .photo:nth-child(3) { transform: rotate(-.7deg); }
+    .photo figcaption {
+      margin-top: .45rem;
+      font-size: .84rem;
+      color: var(--ink2);
+    }
+
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-left: 2px solid var(--line);
+      margin-left: .52rem;
+    }
+    .timeline li {
+      position: relative;
+      padding: 0 0 1.2rem 1.2rem;
+    }
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: .35rem;
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--ink2);
+      background: var(--paper);
+      border-radius: 50%;
+    }
+    .timeline .done::before { background: var(--moss); border-color: var(--moss); }
+    .timeline .progress::before { background: var(--honey); border-color: var(--honey-deep); }
+    .timeline .pending::before { background: transparent; }
+    .phase-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      align-items: baseline;
+    }
+    .phase-no { font-family: "Space Mono", monospace; color: var(--ink2); }
+    .phase-status {
+      font-size: .76rem;
+      border: 1px solid var(--line);
+      padding: .1rem .4rem;
+      color: var(--ink2);
+    }
+    .phase-status.done { color: var(--moss); border-color: color-mix(in srgb, var(--moss) 45%, var(--line)); }
+    .phase-status.progress { color: var(--honey-deep); border-color: color-mix(in srgb, var(--honey) 60%, var(--line)); }
+    .phase-status.pending { color: var(--ink3); }
+    .timeline p { margin: .32rem 0 0; color: var(--ink2); }
+
+    .docs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: rgba(231, 220, 194, 0.42);
+    }
+    .doc-item {
+      padding: .95rem;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 150px;
+    }
+    .doc-item:nth-child(3n) { border-right: 0; }
+    .doc-item h3 { font-size: 1.06rem; margin-bottom: .5rem; }
+    .doc-item p { margin: 0 0 .68rem; color: var(--ink2); font-size: .92rem; }
+    .doc-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: .6rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .doc-state {
+      font-family: "Space Mono", monospace;
+      font-size: .73rem;
+      border: 1px solid var(--line);
+      padding: .14rem .35rem;
+      color: var(--ink2);
+    }
+    .doc-state.build { color: var(--honey-deep); }
+    .doc-link { text-decoration: none; color: var(--honey-deep); font-weight: 600; }
+
+    .marginalia {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .note {
+      border: 1px solid var(--paper-edge);
+      background: rgba(231, 220, 194, .65);
+      padding: 1rem;
+      border-left: 4px solid var(--honey);
+    }
+    .note h3 { font-size: 1.08rem; margin-bottom: .5rem; }
+    .note p { margin: 0 0 .65rem; color: var(--ink2); }
+    .note a { color: var(--honey-deep); font-weight: 600; text-decoration: none; }
+
+    .team-row {
+      border: 1px solid var(--line);
+      background: var(--paper2);
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: .8rem;
+    }
+    .team-row div { border-right: 1px dashed var(--line); padding-right: .7rem; }
+    .team-row div:last-child { border-right: 0; }
+    .team-role { display: block; font-size: .8rem; color: var(--ink3); margin-top: .23rem; }
+
+    .repo-sheet {
+      border: 1px solid var(--line);
+      background: rgba(231,220,194,.45);
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .tree {
+      margin: 0;
+      padding: .8rem;
+      border: 1px solid var(--paper-edge);
+      background: var(--paper);
+      font-family: "Space Mono", monospace;
+      font-size: .82rem;
+      color: var(--ink2);
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .specs {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--paper);
+      border: 1px solid var(--paper-edge);
+      margin-bottom: .8rem;
+    }
+    .specs td {
+      border-bottom: 1px solid var(--line);
+      padding: .5rem;
+      vertical-align: top;
+      font-size: .9rem;
+    }
+    .specs td:first-child { color: var(--ink3); width: 45%; }
+    .clone {
+      margin: 0;
+      border: 1px solid var(--paper-edge);
+      background: #e9dfc8;
+      padding: .7rem;
+      font-family: "Space Mono", monospace;
+      color: var(--ink);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 2.1rem 0;
+      background: color-mix(in srgb, var(--paper) 80%, #fff 20%);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1.1fr;
+      gap: 1rem;
+    }
+    .footer-grid h3 {
+      font-size: 1rem;
+      margin-bottom: .5rem;
+    }
+    .footer-grid p,
+    .footer-grid li,
+    .footer-grid a {
+      color: var(--ink2);
+      font-size: .9rem;
+      margin: 0;
+      text-decoration: none;
+      list-style: none;
+      padding: 0;
+    }
+    .footer-grid ul { margin: 0; padding: 0; display: grid; gap: .35rem; }
+    .copyright {
+      margin-top: 1rem;
+      padding-top: .8rem;
+      border-top: 1px dashed var(--line);
+      color: var(--ink3);
+      font-size: .82rem;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(0,0,0,.8);
+      z-index: 60;
+    }
+    .lightbox.open { display: grid; }
+    .lightbox img {
+      max-width: min(1200px, 96vw);
+      max-height: 88vh;
+      border: 1px solid #fff;
+    }
+    .lightbox button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      border: 1px solid #fff;
+      color: #fff;
+      background: transparent;
+      padding: .45rem .65rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .nav-links { display: none; }
+      .menu-btn { display: inline-flex; position: relative; }
+      .hero-grid,
+      .repo-sheet,
+      .marginalia,
+      .footer-grid,
+      .team-row,
+      .gallery,
+      .docs-grid {
+        grid-template-columns: 1fr;
+      }
+      .flow { grid-template-columns: 1fr; }
+      .arrow { transform: rotate(90deg); }
+      .doc-item,
+      .doc-item:nth-child(3n) { border-right: 0; }
+      .team-row div { border-right: 0; border-bottom: 1px dashed var(--line); padding-bottom: .6rem; }
+      .team-row div:last-child { border-bottom: 0; }
+      .readings { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 920px) {
+      .mobile-nav { display: none; }
+      .mobile-nav.open { display: block; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .hero-reveal { animation: none; opacity: 1; filter: none; transform: none; }
+      *, *::before, *::after { transition-duration: 0.001ms !important; animation-duration: 0.001ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="#hero" aria-label="Inicio BeeStation">
+        <span class="brand-mark" aria-hidden="true">🐝</span>
+        <span>BeeStation</span>
+      </a>
+      <nav aria-label="Principal">
+        <ul class="nav-links">
+          <li><a href="#instrumentos">Instrumentos</a></li>
+          <li><a href="#arquitectura">Arquitectura</a></li>
+          <li><a href="#prototipo">Prototipo</a></li>
+          <li><a href="#bitacora">Bitácora</a></li>
+          <li><a href="#documentacion">Documentación</a></li>
+          <li><a href="#equipo">Equipo</a></li>
+          <li><a href="#repositorio">Repositorio</a></li>
+          <li><a class="repo-btn" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Repositorio</a></li>
+        </ul>
+      </nav>
+      <button class="menu-btn" id="menuButton" aria-expanded="false" aria-controls="mobileNav" aria-label="Abrir menú">
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+    <nav class="container mobile-nav" id="mobileNav" aria-label="Menú móvil">
+      <a href="#instrumentos">Instrumentos</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#prototipo">Prototipo</a>
+      <a href="#bitacora">Bitácora</a>
+      <a href="#documentacion">Documentación</a>
+      <a href="#equipo">Equipo</a>
+      <a href="#repositorio">Repositorio</a>
+      <a href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Repositorio</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="hero">
+      <div class="container hero-grid hero-reveal">
+        <div class="hero-copy">
+          <p class="eyebrow">SENA · Ficha 3412544 · Programación de Software, 2026</p>
+          <h1>Una bitácora de campo para colmenas que hablan solas.</h1>
+          <p>
+            BeeStation registra temperatura, humedad relativa, peso y sonido de la colmena en tiempo real para convertir inspecciones aisladas en una observación bioclimática continua.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary" href="#documentacion">Ver documentación</a>
+            <a class="btn" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Código fuente</a>
+          </div>
+        </div>
+
+        <aside class="specimen" aria-label="Placa de espécimen del prototipo">
+          <div class="frame">
+            <img src="docs/arquitectura/Proto_Caja.png" alt="Prototipo BeeStation en caja de campo" loading="lazy" />
+            <p class="caption"><strong>Fig. 01</strong> Prototipo físico BeeStation, caja de instrumentación.</p>
+          </div>
+          <dl class="readings">
+            <div class="reading"><dt>Variables bioclimáticas</dt><dd>4 en línea</dd></div>
+            <div class="reading"><dt>Encuesta validada</dt><dd>568 respuestas</dd></div>
+            <div class="reading"><dt>Microcontrolador</dt><dd>ESP32 DevKit</dd></div>
+            <div class="reading"><dt>Ventana de observación</dt><dd>24/7 continuo</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <section id="instrumentos">
+      <div class="container">
+        <h2>Instrumentos monitoreados</h2>
+        <p class="section-intro">Registro de variables críticas de colmena con su sensor físico y su rango de referencia operativo.</p>
+        <table class="ledger">
+          <thead>
+            <tr>
+              <th>Sensor</th>
+              <th>Variable y módulo</th>
+              <th>Qué revela</th>
+              <th>Rango de referencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🌡️</td>
+              <td><strong>Temperatura</strong><br /><span class="sensor-chip">DHT22</span></td>
+              <td>Detecta desviaciones que afectan el desarrollo del <em>brood</em>; precisión ±0.5 °C.</td>
+              <td class="range">
+                <div class="bar" style="--pct:72%"></div>
+                <p>Óptimo 34–36 °C</p>
+              </td>
+            </tr>
+            <tr>
+              <td>💧</td>
+              <td><strong>Humedad relativa</strong><br /><span class="sensor-chip">DHT22</span></td>
+              <td>Fuera de rango favorece fermentación o deshidratación del néctar; precisión ±2–5 %.</td>
+              <td class="range">
+                <div class="bar" style="--pct:66%"></div>
+                <p>Óptimo 50–80 % HR</p>
+              </td>
+            </tr>
+            <tr>
+              <td>⚖️</td>
+              <td><strong>Peso de la colmena</strong><br /><span class="sensor-chip">HX711 + celda 0–50 kg · 24 bits</span></td>
+              <td>Permite inferir flujo de néctar, consumo interno y posibles enjambrazones.</td>
+              <td class="range">
+                <div class="bar" style="--pct:44%"></div>
+                <p>Lectura continua sobre base histórica</p>
+              </td>
+            </tr>
+            <tr>
+              <td>🎙️🌫️</td>
+              <td><strong>Sonido y calidad de aire</strong><br /><span class="sensor-chip">MAX9814 + MQ-135</span></td>
+              <td>Detecta cambios de zumbido (estrés/enjambre) y mide CO₂/gases nocivos.</td>
+              <td class="range">
+                <div class="bar" style="--pct:58%"></div>
+                <p>CO₂ normal &lt; 400 ppm</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="arquitectura">
+      <div class="container">
+        <h2>Arquitectura del flujo de datos</h2>
+        <p class="section-intro">Del sensor al histórico: adquisición en borde, procesamiento local, envío JSON y visualización en nube.</p>
+        <div class="arch-box">
+          <div class="flow" aria-label="Diagrama de flujo BeeStation">
+            <div class="node"><div><strong>Sensores</strong><br />DHT22 · HX711<br />MQ-135 · MAX9814</div></div>
+            <div class="arrow">→</div>
+            <div class="node"><div><strong>ESP32</strong><br />WiFi + procesamiento<br />normalización JSON</div></div>
+            <div class="arrow">→</div>
+            <div class="node cloud"><div><strong>ThingSpeak</strong><br />cloud storage + API</div></div>
+          </div>
+          <div class="flow" aria-hidden="true">
+            <div class="node"><div><strong>Dashboard</strong></div></div>
+            <div class="node"><div><strong>Alertas</strong></div></div>
+            <div class="node"><div><strong>Histórico</strong></div></div>
+            <div class="arrow"></div>
+            <div class="arrow"></div>
+          </div>
+          <ul class="stack-tags" aria-label="Stack técnico">
+            <li>ESP32 DevKit</li><li>Arduino IDE</li><li>ThingSpeak</li><li>MQTT</li><li>REST API</li>
+            <li>C++</li><li>Wi-Fi 2.4 GHz</li><li>MATLAB Analytics</li><li>JSON</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="prototipo">
+      <div class="container">
+        <h2>Prototipo en campo</h2>
+        <p class="section-intro">Tres vistas reales del sistema físico de monitoreo.</p>
+        <div class="gallery">
+          <figure class="photo" data-full="docs/arquitectura/Proto_Caja.png" tabindex="0" role="button" aria-label="Abrir vista superior del prototipo">
+            <img src="docs/arquitectura/Proto_Caja.png" alt="Vista superior del prototipo BeeStation" loading="lazy" />
+            <figcaption>Vista superior</figcaption>
+          </figure>
+          <figure class="photo" data-full="docs/arquitectura/Protoitpo_Estcr.png" tabindex="0" role="button" aria-label="Abrir vista lateral del prototipo">
+            <img src="docs/arquitectura/Protoitpo_Estcr.png" alt="Vista lateral del prototipo BeeStation" loading="lazy" />
+            <figcaption>Vista lateral</figcaption>
+          </figure>
+          <figure class="photo" data-full="docs/arquitectura/Sistema_iNTR.png" tabindex="0" role="button" aria-label="Abrir vista interna del sistema">
+            <img src="docs/arquitectura/Sistema_iNTR.png" alt="Vista interna del sistema BeeStation" loading="lazy" />
+            <figcaption>Vista interna</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="bitacora">
+      <div class="container">
+        <h2>Bitácora del proyecto</h2>
+        <p class="section-intro">Secuencia de trabajo del desarrollo BeeStation desde la validación del problema hasta la publicación de resultados.</p>
+        <ol class="timeline">
+          <li class="done">
+            <div class="phase-head"><strong class="phase-no">01</strong><h3>Investigación y diagnóstico</h3><span class="phase-status done">completado</span></div>
+            <p>Levantamiento del problema con 568 encuestas en contexto SENA para validar necesidad de monitoreo continuo y adopción tecnológica.</p>
+          </li>
+          <li class="done">
+            <div class="phase-head"><strong class="phase-no">02</strong><h3>Diseño del sistema y selección de componentes</h3><span class="phase-status done">completado</span></div>
+            <p>Definición de arquitectura en tres capas y elección de DHT22, HX711, MQ-135, MAX9814 y ESP32 por costo, disponibilidad y alcance técnico.</p>
+          </li>
+          <li class="progress">
+            <div class="phase-head"><strong class="phase-no">03</strong><h3>Desarrollo del firmware</h3><span class="phase-status progress">en progreso</span></div>
+            <p>Implementación de lectura periódica, validación de umbrales y envío a ThingSpeak vía HTTP/JSON desde el entorno Arduino.</p>
+          </li>
+          <li class="pending">
+            <div class="phase-head"><strong class="phase-no">04</strong><h3>Ensamblaje y pruebas de hardware</h3><span class="phase-status pending">pendiente</span></div>
+            <p>Integración física de sensores en caja de campo y pruebas de estabilidad eléctrica, repetibilidad de mediciones y condiciones reales.</p>
+          </li>
+          <li class="pending">
+            <div class="phase-head"><strong class="phase-no">05</strong><h3>Configuración de plataforma cloud y dashboard</h3><span class="phase-status pending">pendiente</span></div>
+            <p>Parametrización completa de canal ThingSpeak, tablero histórico y reglas de alertas para eventos fuera de rango.</p>
+          </li>
+          <li class="pending">
+            <div class="phase-head"><strong class="phase-no">06</strong><h3>Despliegue en campo y validación</h3><span class="phase-status pending">pendiente</span></div>
+            <p>Instalación en apiario, comparación contra inspección manual y ajuste de umbrales por comportamiento estacional de la colmena.</p>
+          </li>
+          <li class="pending">
+            <div class="phase-head"><strong class="phase-no">07</strong><h3>Análisis de resultados y publicación</h3><span class="phase-status pending">pendiente</span></div>
+            <p>Consolidación de resultados técnicos, conclusiones de investigación aplicada y divulgación de la experiencia del proyecto.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="documentacion">
+      <div class="container">
+        <h2>Documentación</h2>
+        <p class="section-intro">Recursos de soporte técnico, académico y de implementación del sistema.</p>
+        <div class="docs-grid">
+          <article class="doc-item">
+            <h3>Propuesta del proyecto</h3>
+            <p>Documento base con planteamiento, objetivos y alcance.</p>
+            <div class="doc-meta"><span class="doc-state">publicado</span><a class="doc-link" href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+          <article class="doc-item">
+            <h3>Marco teórico</h3>
+            <p>Fundamentos de IoT en agricultura y apicultura de precisión.</p>
+            <div class="doc-meta"><span class="doc-state">en avance</span><a class="doc-link" href="docs/investigacion/marco-teorico.md" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+          <article class="doc-item">
+            <h3>Resultados de encuesta</h3>
+            <p>Reporte consolidado de 568 respuestas de validación.</p>
+            <div class="doc-meta"><span class="doc-state">publicado</span><a class="doc-link" href="investigacion/encuesta/resultados.md" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+          <article class="doc-item">
+            <h3>Arquitectura del sistema</h3>
+            <p>Capas, flujo de datos y decisiones técnicas del prototipo.</p>
+            <div class="doc-meta"><span class="doc-state">publicado</span><a class="doc-link" href="docs/arquitectura/sistema.md" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+          <article class="doc-item">
+            <h3>Manual de instalación</h3>
+            <p>Proceso de alistamiento de entorno y carga de firmware.</p>
+            <div class="doc-meta"><span class="doc-state build">en construcción</span><a class="doc-link" href="docs/manual/instalacion.md" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+          <article class="doc-item">
+            <h3>Manual de uso</h3>
+            <p>Guía operativa para interpretar lecturas y exportar datos.</p>
+            <div class="doc-meta"><span class="doc-state build">en construcción</span><a class="doc-link" href="docs/manual/uso.md" target="_blank" rel="noopener">Abrir</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="retos">
+      <div class="container">
+        <h2>Retos de investigación</h2>
+        <p class="section-intro">Notas al margen para los frentes de estudio abiertos en la documentación académica.</p>
+        <div class="marginalia">
+          <article class="note">
+            <h3>Tema 01 · Fundamentos</h3>
+            <p>Revisión de IoT en agricultura, fisiología de la colmena y variables bioclimáticas críticas para <em>Apis mellifera</em>.</p>
+            <a href="docs/investigacion/marco-teorico.md" target="_blank" rel="noopener">Ver documento</a>
+          </article>
+          <article class="note">
+            <h3>Tema 02 · Benchmark</h3>
+            <p>Comparación con sistemas IoT previos para identificar brechas en conectividad, variables y arquitectura de despliegue.</p>
+            <a href="docs/investigacion/estado-del-arte.md" target="_blank" rel="noopener">Ver documento</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="equipo">
+      <div class="container">
+        <h2>Equipo</h2>
+        <div class="team-row">
+          <div><strong>Andrés J. Parra Bastidas</strong><span class="team-role">Desarrollo</span></div>
+          <div><strong>Samuel Montoya Suárez</strong><span class="team-role">Desarrollo</span></div>
+          <div><strong>Diego Noriega Vega</strong><span class="team-role">Desarrollo</span></div>
+          <div><strong>Farley González</strong><span class="team-role">Instructor</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="repositorio">
+      <div class="container">
+        <h2>Hoja de especificaciones del repositorio</h2>
+        <div class="repo-sheet">
+<pre class="tree" aria-label="Árbol del repositorio">BeeStation/
+├─ firmware/
+├─ hardware/
+├─ dashboard/
+├─ docs/
+├─ tests/
+├─ investigacion/
+├─ README.md
+└─ LICENSE</pre>
+          <div>
+            <table class="specs" aria-label="Especificaciones técnicas del proyecto">
+              <tbody>
+                <tr><td>Licencia</td><td>MIT</td></tr>
+                <tr><td>Lenguaje</td><td>C++ / Arduino</td></tr>
+                <tr><td>Plataforma</td><td>ESP32 + ThingSpeak</td></tr>
+                <tr><td>Estado</td><td>Prototipo académico en desarrollo</td></tr>
+                <tr><td>Organización</td><td>SENA · Ficha 3412544</td></tr>
+              </tbody>
+            </table>
+<pre class="clone">git clone https://github.com/jeronimoparra-ai/BeeStation.git</pre>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <section>
+        <h3>BeeStation</h3>
+        <p>Bitácora digital para observar la salud bioclimática de colmenas con instrumentación IoT de bajo costo.</p>
+      </section>
+      <section>
+        <h3>Navegación</h3>
+        <ul>
+          <li><a href="#hero">Inicio</a></li>
+          <li><a href="#instrumentos">Instrumentos</a></li>
+          <li><a href="#bitacora">Bitácora</a></li>
+          <li><a href="#repositorio">Repositorio</a></li>
+        </ul>
+      </section>
+      <section>
+        <h3>Recursos</h3>
+        <ul>
+          <li><a href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://forms.gle/Qqzvm7dRmz46oWA27" target="_blank" rel="noopener">Encuesta</a></li>
+          <li><a href="https://thingspeak.com" target="_blank" rel="noopener">ThingSpeak</a></li>
+          <li><a href="https://www.sena.edu.co" target="_blank" rel="noopener">SENA</a></li>
+        </ul>
+      </section>
+      <section>
+        <h3>Créditos</h3>
+        <p>Andrés J. Parra Bastidas, Samuel Montoya Suárez, Diego Noriega Vega · Instructor: Farley González.</p>
+      </section>
+    </div>
+    <div class="container copyright">© 2026 BeeStation · Sistema IoT de monitoreo bioclimático para colmenas.</div>
+  </footer>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-label="Visor de imagen">
+    <button type="button" id="lightboxClose" aria-label="Cerrar imagen">Cerrar</button>
+    <img id="lightboxImage" alt="Imagen ampliada del prototipo" />
+  </div>
+
+  <script>
+    const menuButton = document.getElementById('menuButton');
+    const mobileNav = document.getElementById('mobileNav');
+
+    menuButton.addEventListener('click', () => {
+      const expanded = menuButton.getAttribute('aria-expanded') === 'true';
+      menuButton.setAttribute('aria-expanded', String(!expanded));
+      mobileNav.classList.toggle('open');
+    });
+
+    mobileNav.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        menuButton.setAttribute('aria-expanded', 'false');
+        mobileNav.classList.remove('open');
+      });
+    });
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const photos = document.querySelectorAll('.photo');
+
+    function openLightbox(src, alt) {
+      lightboxImage.src = src;
+      lightboxImage.alt = alt;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      lightboxImage.src = '';
+    }
+
+    photos.forEach((photo) => {
+      const img = photo.querySelector('img');
+      const src = photo.dataset.full;
+      photo.addEventListener('click', () => openLightbox(src, img.alt));
+      photo.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openLightbox(src, img.alt);
+        }
+      });
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && lightbox.classList.contains('open')) {
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>
