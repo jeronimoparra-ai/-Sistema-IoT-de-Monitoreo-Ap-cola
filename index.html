@@ -42,7 +42,6 @@
     }
     img { max-width: 100%; display: block; }
     a { color: inherit; }
-    main { overflow: hidden; }
 
     :focus-visible {
       outline: 2px solid var(--honey);
@@ -486,7 +485,8 @@
       font-size: .82rem;
       color: var(--ink2);
       overflow-x: auto;
-      white-space: pre;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     .specs {
       width: 100%;
@@ -510,7 +510,8 @@
       font-family: "Space Mono", monospace;
       color: var(--ink);
       overflow-x: auto;
-      white-space: pre;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
 
     footer {
@@ -591,6 +592,38 @@
       .team-row div { border-right: 0; border-bottom: 1px dashed var(--line); padding-bottom: .6rem; }
       .team-row div:last-child { border-bottom: 0; }
       .readings { grid-template-columns: 1fr; }
+      .ledger,
+      .ledger thead,
+      .ledger tbody,
+      .ledger tr,
+      .ledger th,
+      .ledger td {
+        display: block;
+        width: 100%;
+      }
+      .ledger thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+      .ledger tr {
+        border-bottom: 1px solid var(--line);
+        padding: .4rem 0;
+      }
+      .ledger td {
+        border-bottom: 0;
+        padding: .45rem .7rem;
+      }
+      .ledger td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: .72rem;
+        color: var(--ink3);
+        margin-bottom: .2rem;
+      }
+      .range { max-width: none; }
     }
 
     @media (max-width: 920px) {
@@ -685,37 +718,37 @@
           </thead>
           <tbody>
             <tr>
-              <td>🌡️</td>
-              <td><strong>Temperatura</strong><br /><span class="sensor-chip">DHT22</span></td>
-              <td>Detecta desviaciones que afectan el desarrollo del <em>brood</em>; precisión ±0.5 °C.</td>
-              <td class="range">
+              <td data-label="Sensor">🌡️</td>
+              <td data-label="Variable y módulo"><strong>Temperatura</strong><br /><span class="sensor-chip">DHT22</span></td>
+              <td data-label="Qué revela">Detecta desviaciones que afectan el desarrollo del <em>brood</em>; precisión ±0.5 °C.</td>
+              <td data-label="Rango de referencia" class="range">
                 <div class="bar" style="--pct:72%"></div>
                 <p>Óptimo 34–36 °C</p>
               </td>
             </tr>
             <tr>
-              <td>💧</td>
-              <td><strong>Humedad relativa</strong><br /><span class="sensor-chip">DHT22</span></td>
-              <td>Fuera de rango favorece fermentación o deshidratación del néctar; precisión ±2–5 %.</td>
-              <td class="range">
+              <td data-label="Sensor">💧</td>
+              <td data-label="Variable y módulo"><strong>Humedad relativa</strong><br /><span class="sensor-chip">DHT22</span></td>
+              <td data-label="Qué revela">Fuera de rango favorece fermentación o deshidratación del néctar; precisión ±2–5 %.</td>
+              <td data-label="Rango de referencia" class="range">
                 <div class="bar" style="--pct:66%"></div>
                 <p>Óptimo 50–80 % HR</p>
               </td>
             </tr>
             <tr>
-              <td>⚖️</td>
-              <td><strong>Peso de la colmena</strong><br /><span class="sensor-chip">HX711 + celda 0–50 kg · 24 bits</span></td>
-              <td>Permite inferir flujo de néctar, consumo interno y posibles enjambrazones.</td>
-              <td class="range">
+              <td data-label="Sensor">⚖️</td>
+              <td data-label="Variable y módulo"><strong>Peso de la colmena</strong><br /><span class="sensor-chip">HX711 + celda 0–50 kg · 24 bits</span></td>
+              <td data-label="Qué revela">Permite inferir flujo de néctar, consumo interno y posibles enjambrazones.</td>
+              <td data-label="Rango de referencia" class="range">
                 <div class="bar" style="--pct:44%"></div>
                 <p>Lectura continua sobre base histórica</p>
               </td>
             </tr>
             <tr>
-              <td>🎙️🌫️</td>
-              <td><strong>Sonido y calidad de aire</strong><br /><span class="sensor-chip">MAX9814 + MQ-135</span></td>
-              <td>Detecta cambios de zumbido (estrés/enjambre) y mide CO₂/gases nocivos.</td>
-              <td class="range">
+              <td data-label="Sensor">🎙️🌫️</td>
+              <td data-label="Variable y módulo"><strong>Sonido y calidad de aire</strong><br /><span class="sensor-chip">MAX9814 + MQ-135</span></td>
+              <td data-label="Qué revela">Detecta cambios de zumbido (estrés/enjambre) y mide CO₂/gases nocivos.</td>
+              <td data-label="Rango de referencia" class="range">
                 <div class="bar" style="--pct:58%"></div>
                 <p>CO₂ normal &lt; 400 ppm</p>
               </td>
