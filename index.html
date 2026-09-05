@@ -251,13 +251,37 @@ section{padding:96px 0;}
 }
 .memorial-rule{border:none;border-top:1px solid var(--line);width:64px;margin:0 auto 28px;}
 .memorial-inner .memorial-rule:last-child{margin:28px auto 0;}
+
+/* ── Foto de memoria: tamaño aumentado + halo animado ── */
 .memorial-photo{
-  width:104px;height:104px;border-radius:50%;overflow:hidden;
+  width:150px;height:150px;border-radius:50%;overflow:hidden;
   background:var(--paper2);border:1px solid var(--line);
-  display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+  display:flex;align-items:center;justify-content:center;margin-bottom:22px;
+  position:relative;
+  box-shadow:0 0 0 0 rgba(185,120,30,0.35);
+  animation:memorial-breathe 4.5s ease-in-out infinite;
 }
-.memorial-photo img{width:100%;height:100%;object-fit:cover;}
+.memorial-photo::before{
+  content:'';
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  background:conic-gradient(from 0deg, var(--honey), transparent 40%, var(--honey-deep), transparent 80%, var(--honey));
+  opacity:0.35;
+  animation:memorial-rotate 12s linear infinite;
+  z-index:-1;
+}
+.memorial-photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1;}
 .memorial-photo.is-empty{display:none;}
+
+@keyframes memorial-breathe{
+  0%, 100% { box-shadow:0 0 0 0 rgba(185,120,30,0.35); }
+  50%      { box-shadow:0 0 0 14px rgba(185,120,30,0); }
+}
+@keyframes memorial-rotate{
+  to { transform:rotate(360deg); }
+}
+
 .memorial-eyebrow{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink3);}
 .memorial-name{font-size:21px;font-style:italic;font-weight:500;margin-top:8px;}
 .memorial-dates{font-family:'Space Mono',monospace;font-size:13px;color:var(--moss);margin-top:6px;}
@@ -332,7 +356,7 @@ footer{background:var(--ink);color:var(--paper2);padding:64px 0 30px;}
       <div>
         <div class="hero-eyebrow">SENA · Ficha 3412544 · Programación de Software, 2026</div>
         <h1>Una bitácora de<br>campo para <em>colmenas</em><br>que hablan solas.</h1>
-        <p class="hero-lede">BeeStation registra temperatura, humedad, peso y sonido dentro de la colmena en tiempo real, para que un apicultor sepa cómo está su colonia sin tener que abrirla.</p>
+        <p class="hero-lede">Monitoreo bioclimático no invasivo con ESP32 y sensores de precisión: temperatura, humedad, peso y sonido en tiempo real, servidos en un dashboard propio — sin abrir la colmena ni depender de plataformas de terceros.</p>
         <div class="hero-actions">
           <a class="btn-primary" href="#documentacion">Ver documentación</a>
           <a class="btn-ghost" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Código fuente</a>
@@ -431,9 +455,9 @@ footer{background:var(--ink);color:var(--paper2);padding:64px 0 30px;}
         <div class="pipeline-row">
           <div class="pnode" style="flex-basis:100%;"><div class="pnode-icon">⚡</div><div class="pnode-name">ESP32</div><div class="pnode-sub">WiFi + procesamiento + empaquetado JSON</div></div>
         </div>
-        <div class="arrow-row">↓ MQTT / REST</div>
+        <div class="arrow-row">↓ HTTP POST (JSON)</div>
         <div class="pipeline-row">
-          <div class="pnode cloud" style="flex-basis:100%;"><div class="pnode-icon">☁️</div><div class="pnode-name">ThingSpeak</div><div class="pnode-sub">Cloud · analítica MATLAB</div></div>
+          <div class="pnode cloud" style="flex-basis:100%;"><div class="pnode-icon">🗄️</div><div class="pnode-name">api/ingest.php</div><div class="pnode-sub">PHP 8 + PDO · MySQL/MariaDB</div></div>
         </div>
         <div class="arrow-row">↓ consulta</div>
         <div class="pipeline-row outputs">
@@ -444,9 +468,9 @@ footer{background:var(--ink);color:var(--paper2);padding:64px 0 30px;}
       </div>
 
       <div class="stack-tags">
-        <span class="tag">ESP32 DevKit</span><span class="tag">Arduino IDE</span><span class="tag">ThingSpeak</span>
-        <span class="tag">MQTT</span><span class="tag">REST API</span><span class="tag">C++</span>
-        <span class="tag">Wi-Fi 2.4 GHz</span><span class="tag">MATLAB Analytics</span><span class="tag">JSON</span>
+        <span class="tag">ESP32 DevKit</span><span class="tag">Arduino IDE</span><span class="tag">PHP 8 + PDO</span>
+        <span class="tag">MySQL / MariaDB</span><span class="tag">HTTP POST / JSON</span><span class="tag">C++</span>
+        <span class="tag">Wi-Fi 2.4 GHz</span><span class="tag">Chart.js</span><span class="tag">XAMPP</span>
       </div>
     </div>
   </section>
@@ -502,22 +526,22 @@ footer{background:var(--ink);color:var(--paper2);padding:64px 0 30px;}
         <div class="entry active">
           <div class="entry-head"><span class="entry-num">03</span><span class="entry-status active">en progreso</span></div>
           <h3>Desarrollo del firmware</h3>
-          <p>Programación del ESP32 en C++: lectura multi-sensor, filtrado de señal, reconexión WiFi robusta, empaquetado JSON y envío a ThingSpeak. Watchdog timer, deep sleep y actualizaciones OTA.</p>
+          <p>Programación del ESP32 en C++: lectura multi-sensor, filtrado de señal, reconexión WiFi robusta y envío de datos por HTTP POST directo a la API (sin MQTT ni ThingSpeak). Bloqueado actualmente: Windows no detecta el puerto COM del ESP32 al conectarlo por USB, posiblemente por un cable de solo carga sin líneas de datos.</p>
         </div>
-        <div class="entry">
-          <div class="entry-head"><span class="entry-num">04</span><span class="entry-status pending">pendiente</span></div>
-          <h3>Ensamblaje y pruebas de hardware</h3>
-          <p>Construcción del prototipo: PCB de prototipado, encapsulado IP65, alimentación con panel solar y batería LiPo. Calibración de sensores y pruebas de estrés térmico y de alcance WiFi.</p>
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">04</span><span class="entry-status done">completado</span></div>
+          <h3>Ensamblaje de hardware</h3>
+          <p>Carcasa hexagonal impresa en 3D ensamblada con ESP32, DHT22, HX711, MAX9814, MQ-135 e INA219. Pendiente antes de campo: calibración formal por sensor y pruebas de estrés térmico / alcance WiFi — todavía sin evidencia de haberse ejecutado.</p>
         </div>
-        <div class="entry">
-          <div class="entry-head"><span class="entry-num">05</span><span class="entry-status pending">pendiente</span></div>
-          <h3>Configuración de plataforma cloud y dashboard</h3>
-          <p>Canales ThingSpeak con 8 campos de datos, visualizaciones MATLAB, alertas vía ThingHTTP y TimeControl. Dashboard web responsivo con histórico, exportación CSV y notificaciones push.</p>
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">05</span><span class="entry-status done">completado</span></div>
+          <h3>Backend y dashboard web</h3>
+          <p>Dashboard funcional en PHP + PDO + MySQL/MariaDB, con Chart.js para gráficas en tiempo real y cálculo automático del Índice de Bienestar Bioclimático (IBB). Consume datos reales recibidos por HTTP en <code>api/ingest.php</code> — sin ThingSpeak ni MQTT. Quedan bugs conocidos por resolver antes de producción (ver documentación técnica).</p>
         </div>
-        <div class="entry">
-          <div class="entry-head"><span class="entry-num">06</span><span class="entry-status pending">pendiente</span></div>
+        <div class="entry active">
+          <div class="entry-head"><span class="entry-num">06</span><span class="entry-status active">próximo</span></div>
           <h3>Despliegue en campo y validación</h3>
-          <p>Instalación piloto en colmenas reales. Recolección de datos durante 90 días mínimos, correlación con registros manuales y ajuste de umbrales de alerta.</p>
+          <p>Instalación piloto en colmenas reales, condicionada a resolver primero el bloqueo de carga del firmware (fase 03). Una vez conectado el hardware: recolección de datos durante 90 días mínimos, correlación con registros manuales y ajuste de umbrales de alerta.</p>
         </div>
         <div class="entry">
           <div class="entry-head"><span class="entry-num">07</span><span class="entry-status pending">pendiente</span></div>
