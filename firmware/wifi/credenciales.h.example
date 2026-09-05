@@ -1,0 +1,29 @@
+/**
+ * credenciales.h.example — Plantilla de credenciales
+ * 
+ * INSTRUCCIONES:
+ *   1. Copiar este archivo: cp credenciales.h.example credenciales.h
+ *   2. Editar credenciales.h con tus datos reales
+ *   3. NUNCA subas credenciales.h al repositorio (está en .gitignore)
+ * 
+ * @project  Sistema IoT de Monitoreo Apícola
+ */
+
+#ifndef CREDENCIALES_H
+#define CREDENCIALES_H
+
+// ===== WiFi =====
+// Nombre de tu red WiFi (solo 2.4 GHz)
+#define WIFI_SSID     "NombreDeTuRedWiFi"
+
+// Contraseña de tu red WiFi
+#define WIFI_PASSWORD "TuContraseñaWiFi"
+
+// ===== ThingSpeak =====
+// Write API Key — la encuentras en tu canal: API Keys tab
+#define TS_API_KEY    "XXXXXXXXXXXXXXXX"
+
+// Channel ID — número que aparece en tu canal de ThingSpeak
+#define TS_CHANNEL_ID 1234567
+
+#endif // CREDENCIALES_H

@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="BeeStation — bitácora de campo de un sistema IoT de monitoreo bioclimático para colmenas de Apis mellifera. SENA, Ficha 3412544." />
+<title>BeeStation · Bitácora de monitoreo apícola</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --paper: #f1e9d8;
+  --paper2: #e7dcc2;
+  --paper-edge: #d9caa4;
+  --ink: #211d15;
+  --ink2: #55503f;
+  --ink3: #8b8570;
+  --honey: #b9781e;
+  --honey-deep: #8a5a15;
+  --moss: #545f3c;
+  --rust: #953a22;
+  --line: #c7b98e;
+  --max: 1180px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;scroll-padding-top:76px;}
+body{
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(180deg, transparent 0, transparent 37px, rgba(85,80,63,0.07) 38px),
+    radial-gradient(circle at 12% 0%, rgba(185,120,30,0.10), transparent 42%);
+  color:var(--ink);
+  font-family:'Public Sans', sans-serif;
+  font-size:16px;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+img{display:block;max-width:100%;}
+a{color:inherit;text-decoration:none;}
+.container{width:min(var(--max),100%);margin:0 auto;padding:0 28px;}
+::selection{background:var(--honey);color:var(--paper);}
+h1,h2,h3,h4{font-family:'Fraunces', serif;font-weight:600;letter-spacing:-0.01em;color:var(--ink);}
+p{color:var(--ink2);}
+::-webkit-scrollbar{width:10px;}
+::-webkit-scrollbar-track{background:var(--paper2);}
+::-webkit-scrollbar-thumb{background:var(--paper-edge);border-radius:0;}
+a:focus-visible, button:focus-visible, summary:focus-visible{outline:2px solid var(--honey-deep);outline-offset:3px;}
+
+/* ── field-label, used sparingly for the ledger numbering that IS sequential ── */
+.field-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Space Mono', monospace;font-size:12.5px;color:var(--honey-deep);
+}
+.field-tag::before{content:'';width:6px;height:6px;background:var(--honey-deep);border-radius:50%;}
+
+.rule{border:none;border-top:1px solid var(--line);}
+
+/* ── Header ── */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(241,233,216,0.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line);
+}
+.nav-row{display:flex;align-items:center;justify-content:space-between;height:72px;gap:24px;}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:20px;}
+.brand-mark{width:30px;height:30px;flex:none;}
+.nav-links{display:flex;gap:26px;align-items:center;font-size:14.5px;color:var(--ink2);}
+.nav-links a{position:relative;padding:4px 0;}
+.nav-links a:hover{color:var(--ink);}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:0;width:0;height:1px;background:var(--honey-deep);transition:width .25s ease;}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{
+  border:1px solid var(--ink);padding:8px 16px;font-size:13.5px;
+  font-family:'Space Mono',monospace;white-space:nowrap;
+}
+.nav-cta:hover{background:var(--ink);color:var(--paper);}
+.menu-btn{display:none;background:none;border:1px solid var(--ink3);width:40px;height:40px;align-items:center;justify-content:center;flex:none;}
+.menu-btn span, .menu-btn span::before, .menu-btn span::after{
+  content:'';display:block;width:18px;height:1.5px;background:var(--ink);position:relative;
+}
+.menu-btn span::before{position:absolute;top:-6px;}
+.menu-btn span::after{position:absolute;top:6px;}
+
+/* ── Hero: specimen plate ── */
+.hero{padding:64px 0 40px;}
+.hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center;}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:13px;color:var(--ink3);margin-bottom:18px;}
+.hero h1{font-size:clamp(40px,5.6vw,68px);line-height:0.98;font-weight:600;}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--honey-deep);}
+.hero-lede{margin-top:22px;max-width:46ch;font-size:17.5px;}
+.hero-actions{display:flex;gap:16px;margin-top:32px;flex-wrap:wrap;}
+.btn-primary{background:var(--ink);color:var(--paper);padding:13px 24px;font-size:14.5px;font-family:'Space Mono',monospace;}
+.btn-primary:hover{background:var(--honey-deep);}
+.btn-ghost{border:1px solid var(--ink3);padding:13px 24px;font-size:14.5px;font-family:'Space Mono',monospace;}
+.btn-ghost:hover{border-color:var(--ink);}
+
+.plate{
+  position:relative;background:var(--paper2);border:1px solid var(--line);
+  padding:26px;
+}
+.plate::before{
+  content:'Fig. 01 — prototipo físico, vista de campo';
+  position:absolute;bottom:-28px;left:0;font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink3);
+}
+.plate img{width:100%;filter:sepia(0.06) contrast(1.02);}
+.plate-readouts{display:grid;grid-template-columns:repeat(2,1fr);gap:0;margin-top:22px;border-top:1px solid var(--line);}
+.readout{padding:16px 4px 0;border-right:1px solid var(--line);}
+.readout:nth-child(2n){border-right:none;}
+.readout-val{font-family:'Space Mono',monospace;font-size:22px;color:var(--honey-deep);}
+.readout-label{font-size:12px;color:var(--ink3);margin-top:2px;}
+
+@keyframes ink-in{from{opacity:0;transform:translateY(10px);filter:blur(2px);}to{opacity:1;transform:none;filter:blur(0);}}
+.hero-eyebrow, .hero h1, .hero-lede, .hero-actions{animation:ink-in .7s ease both;}
+.hero h1{animation-delay:.08s;}
+.hero-lede{animation-delay:.18s;}
+.hero-actions{animation-delay:.26s;}
+
+/* ── Section scaffolding ── */
+section{padding:96px 0;}
+.section-head{max-width:640px;margin-bottom:52px;}
+.section-head h2{font-size:clamp(28px,3.4vw,38px);margin-top:10px;}
+.section-head p{margin-top:14px;font-size:16px;}
+.sep{padding:0;}
+.sep .container{border-top:1px solid var(--line);}
+
+/* ── Variables: ledger rows ── */
+.ledger{border-top:1px solid var(--ink);}
+.ledger-row{
+  display:grid;grid-template-columns:64px 1.1fr 1.6fr 1fr;gap:28px;
+  padding:26px 0;border-bottom:1px solid var(--line);align-items:start;
+}
+.ledger-row-head{
+  font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink3);
+  padding-bottom:12px;border-bottom:1px solid var(--ink);display:grid;
+  grid-template-columns:64px 1.1fr 1.6fr 1fr;gap:28px;
+}
+.ledger-icon{font-size:26px;}
+.ledger-name{font-family:'Fraunces',serif;font-weight:600;font-size:19px;}
+.ledger-sensor{font-family:'Space Mono',monospace;font-size:12.5px;color:var(--honey-deep);margin-top:4px;}
+.ledger-desc{font-size:15px;color:var(--ink2);}
+.range-bar{height:6px;background:var(--paper2);border:1px solid var(--line);position:relative;margin-top:8px;}
+.range-fill{position:absolute;top:-1px;bottom:-1px;background:var(--moss);opacity:0.55;}
+.range-label{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink3);margin-top:6px;}
+
+/* ── Arquitectura: annotated pipeline ── */
+.pipeline{position:relative;padding:36px 0 8px;}
+.pipeline-row{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+.pnode{
+  flex:1 1 150px;border:1px solid var(--line);background:var(--paper2);
+  padding:20px 16px;text-align:left;position:relative;
+}
+.pnode + .pnode{border-left:none;}
+.pnode-icon{font-size:22px;}
+.pnode-name{font-family:'Space Mono',monospace;font-size:13px;margin-top:10px;color:var(--ink);}
+.pnode-sub{font-size:12px;color:var(--ink3);margin-top:2px;}
+.pnode.cloud{background:var(--ink);color:var(--paper);}
+.pnode.cloud .pnode-sub{color:#c9c2ac;}
+.arrow-row{display:flex;justify-content:center;padding:2px 0;color:var(--ink3);font-family:'Space Mono',monospace;font-size:13px;}
+.outputs{display:flex;gap:0;margin-top:0;}
+.outputs .pnode{background:transparent;border-top:none;}
+.stack-tags{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px;}
+.tag{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink2);border:1px solid var(--line);padding:6px 12px;}
+
+/* ── Prototipo: taped field photos ── */
+.field-photos{display:grid;grid-template-columns:repeat(3,1fr);gap:34px;margin-top:8px;}
+.polaroid{
+  background:#fbf8f0;padding:12px 12px 46px;border:1px solid var(--paper-edge);
+  box-shadow:2px 4px 10px rgba(33,29,21,0.10);
+  cursor:zoom-in;
+}
+.polaroid:nth-child(1){transform:rotate(-1.4deg);}
+.polaroid:nth-child(2){transform:rotate(0.9deg);}
+.polaroid:nth-child(3){transform:rotate(-0.4deg);}
+.polaroid:hover{transform:rotate(0deg) translateY(-3px);}
+.polaroid img{filter:sepia(0.08) contrast(1.03);}
+.polaroid-cap{
+  position:absolute;margin-top:14px;font-family:'Space Mono',monospace;font-size:12px;color:var(--ink2);
+}
+.polaroid{position:relative;transition:transform .3s ease;}
+
+.lightbox{
+  position:fixed;inset:0;background:rgba(33,29,21,0.92);z-index:100;
+  display:none;align-items:center;justify-content:center;padding:40px;
+}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:min(900px,90vw);max-height:80vh;border:6px solid var(--paper);}
+.lightbox-close{
+  position:absolute;top:26px;right:30px;color:var(--paper);font-family:'Space Mono',monospace;
+  border:1px solid var(--paper);padding:8px 14px;background:none;
+}
+
+/* ── Roadmap: logbook ── */
+.logbook{border-left:1px solid var(--ink);margin-left:6px;}
+.entry{position:relative;padding:0 0 44px 38px;}
+.entry:last-child{padding-bottom:4px;}
+.entry::before{
+  content:'';position:absolute;left:-6px;top:4px;width:11px;height:11px;background:var(--paper);
+  border:1px solid var(--ink);border-radius:50%;
+}
+.entry.done::before{background:var(--moss);border-color:var(--moss);}
+.entry.active::before{background:var(--honey-deep);border-color:var(--honey-deep);}
+.entry-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+.entry-num{font-family:'Space Mono',monospace;color:var(--ink3);font-size:14px;}
+.entry-status{font-family:'Space Mono',monospace;font-size:12px;}
+.entry-status.done{color:var(--moss);}
+.entry-status.active{color:var(--honey-deep);}
+.entry-status.pending{color:var(--ink3);}
+.entry h3{font-size:20px;margin-top:6px;}
+.entry p{margin-top:8px;max-width:64ch;font-size:15px;}
+
+/* ── Documentación: index cards ── */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);}
+.doc-card{background:var(--paper);padding:28px;display:flex;flex-direction:column;gap:12px;min-height:180px;}
+.doc-card h3{font-size:17px;}
+.doc-card p{font-size:14px;flex:1;}
+.doc-status{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink3);}
+.doc-link{font-family:'Space Mono',monospace;font-size:13px;color:var(--honey-deep);align-self:flex-start;border-bottom:1px solid transparent;}
+.doc-link:hover{border-color:var(--honey-deep);}
+
+/* ── Investigación: marginalia ── */
+.margin-notes{display:grid;grid-template-columns:1fr 1fr;gap:44px;}
+.marginalia{border-top:2px solid var(--ink);padding-top:18px;}
+.marginalia .field-tag{margin-bottom:10px;}
+.marginalia h3{font-size:20px;}
+.marginalia p{margin-top:10px;font-size:15px;}
+.marginalia .doc-link{margin-top:14px;display:inline-block;}
+
+/* ── Equipo ── */
+.team-row{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);}
+.team-member{flex:1 1 200px;padding:22px 0;border-right:1px solid var(--line);}
+.team-member:last-child{border-right:none;}
+.team-role{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--ink3);}
+.team-name{font-family:'Fraunces',serif;font-size:18px;margin-top:6px;}
+
+/* ── Repositorio: manifest ── */
+.manifest{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;}
+.manifest-tree{font-family:'Space Mono',monospace;font-size:13.5px;line-height:1.9;color:var(--ink2);}
+.manifest-tree .folder{color:var(--ink);}
+.spec-list{border-top:1px solid var(--line);}
+.spec-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;}
+.spec-row span:first-child{color:var(--ink3);font-family:'Space Mono',monospace;font-size:12.5px;}
+.clone-box{margin-top:22px;background:var(--ink);color:var(--paper);padding:16px 18px;font-family:'Space Mono',monospace;font-size:12.5px;overflow-x:auto;white-space:pre;}
+
+/* ── En memoria ── */
+.memorial{padding:64px 0;}
+.memorial-inner{
+  max-width:360px;margin:0 auto;text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+}
+.memorial-rule{border:none;border-top:1px solid var(--line);width:64px;margin:0 auto 28px;}
+.memorial-inner .memorial-rule:last-child{margin:28px auto 0;}
+
+/* ── Foto de memoria: tamaño aumentado + halo animado ── */
+.memorial-photo{
+  width:150px;height:150px;border-radius:50%;overflow:hidden;
+  background:var(--paper2);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;margin-bottom:22px;
+  position:relative;
+  box-shadow:0 0 0 0 rgba(185,120,30,0.35);
+  animation:memorial-breathe 4.5s ease-in-out infinite;
+}
+.memorial-photo::before{
+  content:'';
+  position:absolute;
+  inset:-8px;
+  border-radius:50%;
+  background:conic-gradient(from 0deg, var(--honey), transparent 40%, var(--honey-deep), transparent 80%, var(--honey));
+  opacity:0.35;
+  animation:memorial-rotate 12s linear infinite;
+  z-index:-1;
+}
+.memorial-photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;position:relative;z-index:1;}
+.memorial-photo.is-empty{display:none;}
+
+@keyframes memorial-breathe{
+  0%, 100% { box-shadow:0 0 0 0 rgba(185,120,30,0.35); }
+  50%      { box-shadow:0 0 0 14px rgba(185,120,30,0); }
+}
+@keyframes memorial-rotate{
+  to { transform:rotate(360deg); }
+}
+
+.memorial-eyebrow{font-family:'Space Mono',monospace;font-size:12px;color:var(--ink3);}
+.memorial-name{font-size:21px;font-style:italic;font-weight:500;margin-top:8px;}
+.memorial-dates{font-family:'Space Mono',monospace;font-size:13px;color:var(--moss);margin-top:6px;}
+.memorial-line{font-size:14px;color:var(--ink2);margin-top:12px;max-width:34ch;}
+
+/* ── Footer ── */
+footer{background:var(--ink);color:var(--paper2);padding:64px 0 30px;}
+.foot-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;gap:40px;}
+.foot-brand{font-family:'Fraunces',serif;font-size:22px;color:var(--paper);}
+.foot-desc{margin-top:14px;font-size:13.5px;color:#a49d86;max-width:32ch;}
+.foot-head{font-family:'Space Mono',monospace;font-size:12px;color:#a49d86;margin-bottom:14px;}
+.foot-links{display:flex;flex-direction:column;gap:10px;font-size:14px;}
+.foot-links a:hover{color:var(--honey);}
+.foot-bottom{margin-top:56px;padding-top:24px;border-top:1px solid #3a362a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:#8b8570;}
+
+/* ── Responsive ── */
+@media (max-width:920px){
+  .nav-links{display:none;}
+  .menu-btn{display:flex;}
+  .hero-grid{grid-template-columns:1fr;gap:40px;}
+  .ledger-row, .ledger-row-head{grid-template-columns:40px 1fr;}
+  .ledger-row-head span:nth-child(3), .ledger-row-head span:nth-child(4){display:none;}
+  .ledger-row .ledger-desc, .ledger-row > div:nth-child(4){grid-column:2;}
+  .pipeline-row{flex-direction:column;}
+  .pnode + .pnode{border-left:1px solid var(--line);border-top:none;}
+  .field-photos{grid-template-columns:1fr;}
+  .cards{grid-template-columns:1fr;}
+  .margin-notes{grid-template-columns:1fr;}
+  .manifest{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav-row">
+    <a href="#top" class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none"><polygon points="20,2 36,11 36,29 20,38 4,29 4,11" stroke="#211d15" stroke-width="1.6"/><polygon points="20,10 28,14.5 28,23.5 20,28 12,23.5 12,14.5" fill="#b9781e" opacity="0.85"/></svg>
+      BeeStation
+    </a>
+    <nav class="nav-links">
+      <a href="#instrumentos">Instrumentos</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#prototipo">Prototipo</a>
+      <a href="#bitacora">Bitácora</a>
+      <a href="#documentacion">Documentación</a>
+      <a href="#equipo">Equipo</a>
+    </nav>
+    <a class="nav-cta" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Repositorio</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menú" aria-expanded="false"><span></span></button>
+  </div>
+  <nav id="mobileMenu" style="display:none;border-top:1px solid var(--line);">
+    <div class="container" style="display:flex;flex-direction:column;gap:16px;padding:18px 28px;font-size:15px;">
+      <a href="#instrumentos">Instrumentos</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#prototipo">Prototipo</a>
+      <a href="#bitacora">Bitácora</a>
+      <a href="#documentacion">Documentación</a>
+      <a href="#equipo">Equipo</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-eyebrow">SENA · Ficha 3412544 · Programación de Software, 2026</div>
+        <h1>Una bitácora de<br>campo para <em>colmenas</em><br>que hablan solas.</h1>
+        <p class="hero-lede">Monitoreo bioclimático no invasivo con ESP32 y sensores de precisión: temperatura, humedad, peso y sonido en tiempo real, servidos en un dashboard propio — sin abrir la colmena ni depender de plataformas de terceros.</p>
+        <div class="hero-actions">
+          <a class="btn-primary" href="#documentacion">Ver documentación</a>
+          <a class="btn-ghost" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Código fuente</a>
+        </div>
+      </div>
+      <div class="plate">
+        <img src="docs/arquitectura/Proto_Caja.png" alt="Prototipo físico de BeeStation: carcasa hexagonal impresa en 3D con motivo de panal y abeja" />
+        <div class="plate-readouts">
+          <div class="readout"><div class="readout-val">4</div><div class="readout-label">variables bioclimáticas</div></div>
+          <div class="readout"><div class="readout-val">568</div><div class="readout-label">apicultores encuestados</div></div>
+          <div class="readout"><div class="readout-val">ESP32</div><div class="readout-label">microcontrolador</div></div>
+          <div class="readout"><div class="readout-val">24/7</div><div class="readout-label">monitoreo continuo</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- VARIABLES -->
+  <section id="instrumentos">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Instrumentación</span>
+        <h2>Qué mide el sistema</h2>
+        <p>Cuatro variables bioclimáticas críticas, capturadas en tiempo real, para evaluar la salud y productividad de la colonia.</p>
+      </div>
+
+      <div class="ledger">
+        <div class="ledger-row-head">
+          <span>Sensor</span><span>Variable</span><span>Qué revela</span><span>Rango de referencia</span>
+        </div>
+
+        <div class="ledger-row">
+          <div class="ledger-icon">🌡️</div>
+          <div><div class="ledger-name">Temperatura</div><div class="ledger-sensor">DHT22</div></div>
+          <div class="ledger-desc">Monitoreo continuo del interior de la colmena. Detecta desviaciones del rango óptimo necesario para el desarrollo del brood.</div>
+          <div>
+            <div class="range-bar"><div class="range-fill" style="left:38%;width:12%;"></div></div>
+            <div class="range-label">34–36 °C óptimo · ±0.5 °C precisión</div>
+          </div>
+        </div>
+
+        <div class="ledger-row">
+          <div class="ledger-icon">💧</div>
+          <div><div class="ledger-name">Humedad relativa</div><div class="ledger-sensor">DHT22</div></div>
+          <div class="ledger-desc">La maduración del néctar en miel depende de un rango estrecho de humedad; fuera de él favorece fermentación o deshidratación.</div>
+          <div>
+            <div class="range-bar"><div class="range-fill" style="left:50%;width:30%;"></div></div>
+            <div class="range-label">50–80 % HR óptimo · ±2–5 % precisión</div>
+          </div>
+        </div>
+
+        <div class="ledger-row">
+          <div class="ledger-icon">⚖️</div>
+          <div><div class="ledger-name">Peso de la colmena</div><div class="ledger-sensor">HX711 + celda de carga</div></div>
+          <div class="ledger-desc">La evolución del peso permite inferir flujo de néctar, consumo en temporada baja, y enjambrazones por caídas bruscas.</div>
+          <div>
+            <div class="range-bar"><div class="range-fill" style="left:0%;width:100%;"></div></div>
+            <div class="range-label">0–50 kg · amplificador de 24 bits</div>
+          </div>
+        </div>
+
+        <div class="ledger-row">
+          <div class="ledger-icon">🔊</div>
+          <div><div class="ledger-name">Sonido y calidad de aire</div><div class="ledger-sensor">MAX9814 + MQ-135</div></div>
+          <div class="ledger-desc">El micrófono detecta cambios en el zumbido indicativos de enjambre o estrés; el sensor de gas estima ventilación y condición del enjambre.</div>
+          <div>
+            <div class="range-bar"><div class="range-fill" style="left:20%;width:55%;"></div></div>
+            <div class="range-label">ganancia automática · CO₂ y gases nocivos</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- ARQUITECTURA -->
+  <section id="arquitectura">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Arquitectura</span>
+        <h2>El camino de un dato</h2>
+        <p>Desde el sensor hasta el dashboard: adquisición, transmisión y visualización en la nube.</p>
+      </div>
+
+      <div class="pipeline">
+        <div class="pipeline-row">
+          <div class="pnode"><div class="pnode-icon">🌡️💧</div><div class="pnode-name">DHT22</div><div class="pnode-sub">Temperatura + HR</div></div>
+          <div class="pnode"><div class="pnode-icon">⚖️</div><div class="pnode-name">HX711</div><div class="pnode-sub">Peso</div></div>
+          <div class="pnode"><div class="pnode-icon">💨</div><div class="pnode-name">MQ-135</div><div class="pnode-sub">Calidad de aire</div></div>
+          <div class="pnode"><div class="pnode-icon">🔊</div><div class="pnode-name">MAX9814</div><div class="pnode-sub">Sonido</div></div>
+        </div>
+        <div class="arrow-row">↓ lectura multi-sensor</div>
+        <div class="pipeline-row">
+          <div class="pnode" style="flex-basis:100%;"><div class="pnode-icon">⚡</div><div class="pnode-name">ESP32</div><div class="pnode-sub">WiFi + procesamiento + empaquetado JSON</div></div>
+        </div>
+        <div class="arrow-row">↓ HTTP POST (JSON)</div>
+        <div class="pipeline-row">
+          <div class="pnode cloud" style="flex-basis:100%;"><div class="pnode-icon">🗄️</div><div class="pnode-name">api/ingest.php</div><div class="pnode-sub">PHP 8 + PDO · MySQL/MariaDB</div></div>
+        </div>
+        <div class="arrow-row">↓ consulta</div>
+        <div class="pipeline-row outputs">
+          <div class="pnode"><div class="pnode-icon">📊</div><div class="pnode-name">Dashboard</div></div>
+          <div class="pnode"><div class="pnode-icon">🔔</div><div class="pnode-name">Alertas</div></div>
+          <div class="pnode"><div class="pnode-icon">📈</div><div class="pnode-name">Histórico</div></div>
+        </div>
+      </div>
+
+      <div class="stack-tags">
+        <span class="tag">ESP32 DevKit</span><span class="tag">Arduino IDE</span><span class="tag">PHP 8 + PDO</span>
+        <span class="tag">MySQL / MariaDB</span><span class="tag">HTTP POST / JSON</span><span class="tag">C++</span>
+        <span class="tag">Wi-Fi 2.4 GHz</span><span class="tag">Chart.js</span><span class="tag">XAMPP</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- PROTOTIPO -->
+  <section id="prototipo">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Registro fotográfico</span>
+        <h2>El prototipo, en mano</h2>
+        <p>Tres vistas de la carcasa hexagonal impresa en 3D y su integración de hardware. Clic para ampliar.</p>
+      </div>
+      <div class="field-photos">
+        <div class="polaroid" data-full="docs/arquitectura/Proto_Caja.png">
+          <img src="docs/arquitectura/Proto_Caja.png" alt="Vista superior del prototipo BeeStation con cubierta de panal y abeja 3D" />
+          <div class="polaroid-cap">vista superior</div>
+        </div>
+        <div class="polaroid" data-full="docs/arquitectura/Protoitpo_Estcr.png">
+          <img src="docs/arquitectura/Protoitpo_Estcr.png" alt="Vista lateral del prototipo BeeStation" />
+          <div class="polaroid-cap">vista lateral</div>
+        </div>
+        <div class="polaroid" data-full="docs/arquitectura/Sistema_iNTR.png">
+          <img src="docs/arquitectura/Sistema_iNTR.png" alt="Vista interna del sistema BeeStation" />
+          <div class="polaroid-cap">vista interna</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- ROADMAP / BITÁCORA -->
+  <section id="bitacora">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Bitácora del proyecto</span>
+        <h2>Siete fases, de la investigación a la publicación</h2>
+      </div>
+
+      <div class="logbook">
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">01</span><span class="entry-status done">completado</span></div>
+          <h3>Investigación y diagnóstico</h3>
+          <p>Revisión de literatura sobre apicultura de precisión e IoT aplicado al monitoreo de colmenas. Encuesta a 568 apicultores de la región para identificar problemas prioritarios y validar la necesidad del sistema.</p>
+        </div>
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">02</span><span class="entry-status done">completado</span></div>
+          <h3>Diseño del sistema y selección de componentes</h3>
+          <p>Arquitectura hardware-software, selección de sensores, microcontrolador y plataforma cloud. Diagramas de conexión, esquemas eléctricos y presupuesto.</p>
+        </div>
+        <div class="entry active">
+          <div class="entry-head"><span class="entry-num">03</span><span class="entry-status active">en progreso</span></div>
+          <h3>Desarrollo del firmware</h3>
+          <p>Programación del ESP32 en C++: lectura multi-sensor, filtrado de señal, reconexión WiFi robusta y envío de datos por HTTP POST directo a la API (sin MQTT ni ThingSpeak). Bloqueado actualmente: Windows no detecta el puerto COM del ESP32 al conectarlo por USB, posiblemente por un cable de solo carga sin líneas de datos.</p>
+        </div>
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">04</span><span class="entry-status done">completado</span></div>
+          <h3>Ensamblaje de hardware</h3>
+          <p>Carcasa hexagonal impresa en 3D ensamblada con ESP32, DHT22, HX711, MAX9814, MQ-135 e INA219. Pendiente antes de campo: calibración formal por sensor y pruebas de estrés térmico / alcance WiFi — todavía sin evidencia de haberse ejecutado.</p>
+        </div>
+        <div class="entry done">
+          <div class="entry-head"><span class="entry-num">05</span><span class="entry-status done">completado</span></div>
+          <h3>Backend y dashboard web</h3>
+          <p>Dashboard funcional en PHP + PDO + MySQL/MariaDB, con Chart.js para gráficas en tiempo real y cálculo automático del Índice de Bienestar Bioclimático (IBB). Consume datos reales recibidos por HTTP en <code>api/ingest.php</code> — sin ThingSpeak ni MQTT. Quedan bugs conocidos por resolver antes de producción (ver documentación técnica).</p>
+        </div>
+        <div class="entry active">
+          <div class="entry-head"><span class="entry-num">06</span><span class="entry-status active">próximo</span></div>
+          <h3>Despliegue en campo y validación</h3>
+          <p>Instalación piloto en colmenas reales, condicionada a resolver primero el bloqueo de carga del firmware (fase 03). Una vez conectado el hardware: recolección de datos durante 90 días mínimos, correlación con registros manuales y ajuste de umbrales de alerta.</p>
+        </div>
+        <div class="entry">
+          <div class="entry-head"><span class="entry-num">07</span><span class="entry-status pending">pendiente</span></div>
+          <h3>Análisis de resultados y publicación</h3>
+          <p>Análisis estadístico, evaluación de impacto, informe final y artículo técnico. Presentación ante el SENA y socialización con la comunidad apícola regional.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- DOCUMENTACIÓN -->
+  <section id="documentacion">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Archivo</span>
+        <h2>Documentación del proyecto</h2>
+      </div>
+      <div class="cards">
+        <div class="doc-card">
+          <div class="doc-status">disponible</div>
+          <h3>Propuesta del proyecto</h3>
+          <p>Justificación, objetivos, alcance, metodología y cronograma de actividades.</p>
+          <a class="doc-link" href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener">Abrir documento</a>
+        </div>
+        <div class="doc-card">
+          <div class="doc-status">disponible</div>
+          <h3>Marco teórico</h3>
+          <p>Revisión bibliográfica sobre apicultura de precisión, IoT en agricultura y biología de Apis mellifera.</p>
+          <a class="doc-link" href="docs/investigacion/EVIDENCIA%203%20Proyecto%20FINAL.docx" target="_blank" rel="noopener">Abrir documento</a>
+        </div>
+        <div class="doc-card">
+          <div class="doc-status">568 respuestas</div>
+          <h3>Resultados de encuesta</h3>
+          <p>Análisis estadístico de apicultores de la región: distribución, hallazgos y conclusiones de diseño.</p>
+          <a class="doc-link" href="https://forms.gle/encuesta-apicola" target="_blank" rel="noopener">Ver formulario</a>
+        </div>
+        <div class="doc-card">
+          <div class="doc-status">disponible</div>
+          <h3>Arquitectura del sistema</h3>
+          <p>Diagramas hardware-software, esquemáticos de conexión y especificaciones de cada componente.</p>
+          <a class="doc-link" href="docs/arquitectura/Arquitectura.png" target="_blank" rel="noopener">Ver diagrama</a>
+        </div>
+        <div class="doc-card">
+          <div class="doc-status">en construcción</div>
+          <h3>Manual de instalación</h3>
+          <p>Guía para instalar el hardware, configurar el entorno y cargar el firmware al ESP32.</p>
+          <a class="doc-link" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Ver repositorio</a>
+        </div>
+        <div class="doc-card">
+          <div class="doc-status">en construcción</div>
+          <h3>Manual de uso</h3>
+          <p>Interpretación del dashboard, comprensión de alertas y mantenimiento preventivo.</p>
+          <a class="doc-link" href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">Ver repositorio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- RETOS / INVESTIGACIÓN -->
+  <section id="investigacion">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Notas al margen</span>
+        <h2>Retos de investigación</h2>
+        <p>Lecturas y hallazgos que fundamentan las decisiones técnicas del proyecto.</p>
+      </div>
+      <div class="margin-notes">
+        <div class="marginalia">
+          <span class="field-tag">Tema 01 · Fundamentos</span>
+          <h3>IoT en agricultura y apicultura de precisión</h3>
+          <p>Base conceptual del sistema: conectividad, sensores, comportamiento bioclimático de Apis mellifera y justificación técnica del ESP32.</p>
+          <a class="doc-link" href="docs/investigacion/" target="_blank" rel="noopener">Abrir documento técnico</a>
+        </div>
+        <div class="marginalia">
+          <span class="field-tag">Tema 02 · Benchmark</span>
+          <h3>Comparación con sistemas IoT previos</h3>
+          <p>Revisión de referencias académicas y comparación de tecnologías para ubicar este prototipo dentro de las tendencias de apicultura inteligente.</p>
+          <a class="doc-link" href="docs/investigacion/" target="_blank" rel="noopener">Abrir documento técnico</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- EQUIPO -->
+  <section id="equipo">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Equipo</span>
+        <h2>Quién construye BeeStation</h2>
+      </div>
+      <div class="team-row">
+        <div class="team-member"><div class="team-role">Desarrollo</div><div class="team-name">Andrés J. Parra Bastidas</div></div>
+        <div class="team-member"><div class="team-role">Desarrollo</div><div class="team-name">Samuel Montoya Suárez</div></div>
+        <div class="team-member"><div class="team-role">Desarrollo</div><div class="team-name">Diego Noriega Vega</div></div>
+        <div class="team-member"><div class="team-role">Desarrollo</div><div class="team-name">Edwin Segundo Camacho</div></div>
+        <div class="team-member"><div class="team-role">Instructor</div><div class="team-name">Farley González</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="sep"><div class="container"></div></div>
+
+  <!-- REPOSITORIO -->
+  <section id="repositorio">
+    <div class="container">
+      <div class="section-head">
+        <span class="field-tag">Código fuente</span>
+        <h2>Repositorio público</h2>
+        <p>Contribuciones bienvenidas — revisa la guía en el README antes de abrir un pull request.</p>
+      </div>
+      <div class="manifest">
+        <div class="manifest-tree">
+          <div class="folder">📁 firmware/</div>&nbsp;&nbsp;— código ESP32 (Arduino/C++)<br>
+          <div class="folder">📁 hardware/</div>&nbsp;&nbsp;— esquemáticos y BOM<br>
+          <div class="folder">📁 dashboard/</div>&nbsp;&nbsp;— dashboard web y scripts MATLAB<br>
+          <div class="folder">📁 docs/</div>&nbsp;&nbsp;— documentación técnica y académica<br>
+          <div class="folder">📁 tests/</div>&nbsp;&nbsp;— scripts de prueba y validación<br>
+          <div class="folder">📁 investigacion/</div>&nbsp;&nbsp;— encuesta y análisis estadístico<br>
+          📄 README.md<br>
+          📄 LICENSE
+        </div>
+        <div>
+          <div class="spec-list">
+            <div class="spec-row"><span>Licencia</span><span>MIT</span></div>
+            <div class="spec-row"><span>Lenguaje principal</span><span>C++ / Arduino</span></div>
+            <div class="spec-row"><span>Plataforma</span><span>ESP32 + ThingSpeak</span></div>
+            <div class="spec-row"><span>Estado</span><span>En desarrollo</span></div>
+            <div class="spec-row"><span>Organización</span><span>SENA · Ficha 3412544</span></div>
+          </div>
+          <div class="clone-box">git clone https://github.com/jeronimoparra-ai/BeeStation.git</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EN MEMORIA -->
+  <section id="memoria" class="memorial">
+    <div class="container memorial-inner">
+      <hr class="memorial-rule">
+      <div class="memorial-photo">
+        <img src="assets/homenaje-michael.png" alt="Retrato de Michael Rodríguez Londoño" onerror="this.parentElement.classList.add('is-empty')" />
+      </div>
+      <p class="memorial-eyebrow">En memoria</p>
+      <h3 class="memorial-name">Michael Rodríguez Londoño</h3>
+      <p class="memorial-dates">2009 — 2026</p>
+      <p class="memorial-line">Un compañero de este proyecto. Se le recuerda con cariño.</p>
+      <hr class="memorial-rule">
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">BeeStation</div>
+        <p class="foot-desc">Bitácora de campo de un sistema IoT de monitoreo bioclimático para colonias de Apis mellifera.</p>
+      </div>
+      <div>
+        <div class="foot-head">Navegación</div>
+        <div class="foot-links">
+          <a href="#instrumentos">Instrumentos</a>
+          <a href="#arquitectura">Arquitectura</a>
+          <a href="#prototipo">Prototipo</a>
+          <a href="#bitacora">Bitácora</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-head">Recursos</div>
+        <div class="foot-links">
+          <a href="https://github.com/jeronimoparra-ai/BeeStation" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://forms.gle/encuesta-apicola" target="_blank" rel="noopener">Encuesta</a>
+          <a href="https://thingspeak.com" target="_blank" rel="noopener">ThingSpeak</a>
+          <a href="https://www.sena.edu.co" target="_blank" rel="noopener">SENA</a>
+        </div>
+      </div>
+      <div>
+        <div class="foot-head">Equipo</div>
+        <div class="foot-links">
+          <span>A. Parra Bastidas</span>
+          <span>S. Montoya Suárez</span>
+          <span>D. Noriega Vega</span>
+          <span>E. Segundo Camacho</span>
+
+          <span>Instructor: F. González</span>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 BeeStation · Servicio Nacional de Aprendizaje, Ficha 3412544</span>
+      <span>Hecho por aprendices del SENA para la apicultura colombiana</span>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">cerrar ✕</button>
+  <img id="lightboxImg" src="" alt="" />
+</div>
+
+<script>
+  var menuBtn = document.getElementById('menuBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', function(){
+    var open = mobileMenu.style.display === 'block';
+    mobileMenu.style.display = open ? 'none' : 'block';
+    menuBtn.setAttribute('aria-expanded', String(!open));
+  });
+  document.querySelectorAll('#mobileMenu a').forEach(function(a){
+    a.addEventListener('click', function(){ mobileMenu.style.display = 'none'; });
+  });
+
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  document.querySelectorAll('.polaroid').forEach(function(p){
+    p.addEventListener('click', function(){
+      lightboxImg.src = p.getAttribute('data-full');
+      lightboxImg.alt = p.querySelector('img').alt;
+      lightbox.classList.add('open');
+    });
+  });
+  document.getElementById('lightboxClose').addEventListener('click', function(){
+    lightbox.classList.remove('open');
+  });
+  lightbox.addEventListener('click', function(e){
+    if(e.target === lightbox) lightbox.classList.remove('open');
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') lightbox.classList.remove('open');
+  });
+</script>
+</body>
+</html>
